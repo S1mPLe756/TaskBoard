@@ -1,9 +1,11 @@
+using System.Net;
 using AuthService.Application.DTOs;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
 using AuthService.Domain.Interfaces;
 using AuthService.Domain.ValueObjects;
 using AutoMapper;
+using ExceptionService;
 
 namespace AuthService.Application.Services;
 
@@ -24,7 +26,7 @@ public class AuthService
     {
         var existing = await _userRepository.GetUserByEmailAsync(registerRequestDto.Email);
         if (existing != null)
-            throw new Exception("User already exists");
+            throw new AppException("User already exists", statusCode: HttpStatusCode.Conflict);
 
         var user = _mapper.Map<User>(registerRequestDto);
         

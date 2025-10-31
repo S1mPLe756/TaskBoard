@@ -4,7 +4,11 @@ using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.DbContext;
 using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
+using LoggingService.Interceptors;
+using ExceptionService;
+using LoggingService.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AuthDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
+builder.Host.UseSerilog();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -40,6 +47,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionService();
+app.UseTaskBoardLoggingModule();
 
 app.UseHttpsRedirection();
 
