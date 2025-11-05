@@ -6,7 +6,7 @@ public class LoggingActionFilter: IActionFilter
 {
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        Log.Information("➡️ {Action} | Args: {@Args}",
+        Log.Information("{Action} | Args: {@Args}",
             context.ActionDescriptor.DisplayName,
             context.ActionArguments);
     }
@@ -15,7 +15,7 @@ public class LoggingActionFilter: IActionFilter
     {
         if (context.Exception == null)
         {
-            Log.Information("✅ Completed {Action}", context.ActionDescriptor.DisplayName);
+            Log.Information("Completed {Action}", context.ActionDescriptor.DisplayName);
         }
         
     }

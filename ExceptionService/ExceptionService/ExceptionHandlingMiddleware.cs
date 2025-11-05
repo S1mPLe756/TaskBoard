@@ -46,7 +46,7 @@ public class ExceptionHandlingMiddleware
         }
         else
         {
-            Log.Error(ex, "❌ Unhandled exception");
+            Log.Error(ex, "Unhandled exception");
         }
         
         var response = new ExceptionResponse

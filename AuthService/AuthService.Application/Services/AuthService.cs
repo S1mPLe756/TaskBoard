@@ -9,20 +9,22 @@ using ExceptionService;
 
 namespace AuthService.Application.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ITokenService _tokenService;
+    private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IMapper _mapper;
 
-    public AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+    public AuthService(IUserRepository userRepository, ITokenService tokenService, IJwtTokenProvider jwtTokenProvider, IMapper mapper)
     {
         _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _tokenService = tokenService;
+        _jwtTokenProvider = jwtTokenProvider;
         _mapper = mapper;
     }
 
-    public async Task<string> RegisterAsync(RegisterRequestDto registerRequestDto)
+    public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto registerRequestDto)
     {
         var existing = await _userRepository.GetUserByEmailAsync(registerRequestDto.Email);
         if (existing != null)
@@ -33,19 +35,20 @@ public class AuthService
         user.Password = Password.FromPlainPassword(registerRequestDto.Password);
         user.Role = "User";
         await _userRepository.AddUserAsync(user);
-        return _jwtTokenGenerator.GenerateToken(user);
+        return new RegisterResponseDto("Registration Successful", user.Id.ToString());
     }
 
-    // TODO Создать свои Exception
-    public async Task<string> LoginAsync(LoginRequestDto request)
+    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request)
     {
         var user = await _userRepository.GetUserByEmailAsync(request.Email)
-                   ?? throw new Exception("User not found");
+                   ?? throw new AppException("User not found", HttpStatusCode.NotFound);
 
         if (!user.Password.Verify(request.Password))
-            throw new Exception("Invalid password");
+            throw new AppException("Invalid password");
 
-        return _jwtTokenGenerator.GenerateToken(user);
+        var tokens = await _tokenService.IssueTokensAsync(user);
+        
+        return new LoginResponseDto(tokens.AccessToken, tokens.RefreshToken);
     }
 
 }

@@ -1,17 +1,16 @@
 using AuthService.Application.DTOs;
-using Microsoft.AspNetCore.Identity.Data;
+using AuthService.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.API.Controllers;
-using Application.Services;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(AuthService authService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
     }
@@ -19,14 +18,12 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
-        var token = await _authService.RegisterAsync(request);
-        return Ok(new { Token = token });
+        return Ok(await _authService.RegisterAsync(request));
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
-        var token = await _authService.LoginAsync(request);
-        return Ok(new { Token = token });
+        return Ok(await _authService.LoginAsync(request));
     }
 }

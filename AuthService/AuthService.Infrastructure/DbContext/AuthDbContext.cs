@@ -9,6 +9,8 @@ public class AuthDbContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -24,6 +26,16 @@ public class AuthDbContext : DbContext
                     .HasColumnName("PasswordHash")
                     .IsRequired();
             });
+        });
+        
+        modelBuilder.Entity<RefreshToken>(builder =>
+        {
+            builder.HasKey(u => u.Id);
+            builder.Property(u => u.Token).IsRequired();
+            builder.HasOne(r => r.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

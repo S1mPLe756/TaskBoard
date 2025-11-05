@@ -1,0 +1,90 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/login",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Auth",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": ["POST"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/register",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Auth",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "UpstreamPathTemplate": "/auth/register",
+      "UpstreamHttpMethod": ["POST"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Token/validate",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Auth",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "UpstreamPathTemplate": "/token/validate",
+      "UpstreamHttpMethod": ["POST"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Token/refresh",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Auth",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "UpstreamPathTemplate": "/token/refresh",
+      "UpstreamHttpMethod": ["POST"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Task",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Tasks",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5102 }],
+      "UpstreamPathTemplate": "/task",
+      "UpstreamHttpMethod": ["GET"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
+    }
+    
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000"
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "Auth",
+      "Config": [
+        {
+          "Name": "API Auth",
+          "Version": "v1",
+          "Url": "http://localhost:5101/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Tasks",
+      "Config": [
+        {
+          "Name": "API Tasks",
+          "Version": "v1",
+          "Url": "http://localhost:5102/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

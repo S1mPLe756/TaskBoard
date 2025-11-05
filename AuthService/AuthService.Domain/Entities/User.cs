@@ -10,4 +10,6 @@ public class User
     public Password Password { get; set; } = null!;
     public string Role { get; set; } = null!;
     public DateTime Created { get; set; } = DateTime.UtcNow;
+
+    public List<RefreshToken> RefreshTokens = new List<RefreshToken>();
 }

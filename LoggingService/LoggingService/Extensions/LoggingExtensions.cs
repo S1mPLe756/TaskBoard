@@ -21,7 +21,6 @@ public static class LoggingExtensions
         var esUser = config["Elastic:Username"] ?? "elastic";
         var esPass = config["Elastic:Password"] ?? "changeme";
 
-        // Настройка Serilog
         Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
             .Enrich.WithEnvironmentName()
             .Enrich.WithMachineName()
@@ -50,11 +49,9 @@ public static class LoggingExtensions
             }).CreateLogger();
         Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine(msg));
 
-        // AOP Interceptor
         services.AddSingleton<ProxyGenerator>();
         services.AddTransient<LoggingInterceptor>();
 
-        // Контроллерные фильтры
         services.AddControllers(o => o.Filters.Add<LoggingActionFilter>());
 
         return services;
