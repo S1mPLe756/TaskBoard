@@ -2,6 +2,7 @@ using System.Net;
 using AuthService.Application.DTOs;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
+using AuthService.Domain.Events;
 using AuthService.Domain.Interfaces;
 using AuthService.Domain.ValueObjects;
 using AutoMapper;
@@ -13,15 +14,15 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
-    private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IMapper _mapper;
+    private readonly IEventPublisher _eventPublisher;
 
-    public AuthService(IUserRepository userRepository, ITokenService tokenService, IJwtTokenProvider jwtTokenProvider, IMapper mapper)
+    public AuthService(IUserRepository userRepository, ITokenService tokenService, IEventPublisher eventPublisher, IMapper mapper)
     {
         _userRepository = userRepository;
         _tokenService = tokenService;
-        _jwtTokenProvider = jwtTokenProvider;
         _mapper = mapper;
+        _eventPublisher = eventPublisher;
     }
 
     public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto registerRequestDto)
@@ -35,6 +36,17 @@ public class AuthService : IAuthService
         user.Password = Password.FromPlainPassword(registerRequestDto.Password);
         user.Role = "User";
         await _userRepository.AddUserAsync(user);
+        
+        // Отправляем событие в Kafka
+        var evt = new UserRegisteredEvent
+        {
+            UserId = user.Id,
+            Email = user.Email,
+        };
+
+        await _eventPublisher.PublishUserRegisteredAsync(evt);
+
+        
         return new RegisterResponseDto("Registration Successful", user.Id.ToString());
     }
 

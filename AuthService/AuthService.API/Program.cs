@@ -3,6 +3,7 @@ using AuthService.Application.Mapping;
 using AuthService.Application.Services;
 using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.DbContext;
+using AuthService.Infrastructure.Messaging.Producers;
 using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
 using ExceptionService;
@@ -41,8 +42,10 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService.Application.Services.AuthService>();
+builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 
 builder.Services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
+builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 
 
 var app = builder.Build();

@@ -20,15 +20,18 @@ public static class LoggingExtensions
         var esUri = config["Elastic:Uri"] ?? "https://localhost:9201";
         var esUser = config["Elastic:Username"] ?? "elastic";
         var esPass = config["Elastic:Password"] ?? "changeme";
+        var serviceName = config["Elastic:ServiceName"] ?? "default";
 
         Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
             .Enrich.WithEnvironmentName()
+            .Enrich.FromLogContext()
             .Enrich.WithMachineName()
+            .Enrich.WithProperty("ServiceName", serviceName)
             .WriteTo.Console()
             .WriteTo.Debug()
             .WriteTo.Elasticsearch([new Uri(esUri)], opts =>
             {
-                opts.DataStream = new DataStreamName("logs", "task-board", "demo");
+                opts.DataStream = new DataStreamName("logs", "task-board", serviceName);
                 opts.ChannelDiagnosticsCallback = (channel) => Console.Write(channel.ObservedException);
                 opts.BootstrapMethod = BootstrapMethod.Failure;
                 opts.ConfigureChannel = channelOpts =>
