@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserProfile.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserProfile.Application", "UserProfile.Application\UserProfile.Application.csproj", "{4CA167F5-DFF1-4470-9BFA-32378D5F6F3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Middleware", "..\Shared.Middleware\Shared.Middleware\Shared.Middleware.csproj", "{93B113C0-EDC4-41A2-9A3E-9562F2917693}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{4CA167F5-DFF1-4470-9BFA-32378D5F6F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CA167F5-DFF1-4470-9BFA-32378D5F6F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CA167F5-DFF1-4470-9BFA-32378D5F6F3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93B113C0-EDC4-41A2-9A3E-9562F2917693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93B113C0-EDC4-41A2-9A3E-9562F2917693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93B113C0-EDC4-41A2-9A3E-9562F2917693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93B113C0-EDC4-41A2-9A3E-9562F2917693}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

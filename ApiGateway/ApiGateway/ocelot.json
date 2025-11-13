@@ -56,7 +56,7 @@
       "UpstreamPathTemplate": "/task",
       "UpstreamHttpMethod": ["GET"],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "JwtBearer",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
@@ -68,7 +68,7 @@
       "UpstreamPathTemplate": "/profile/{userId}",
       "UpstreamHttpMethod": ["GET"],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "JwtBearer",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
@@ -80,7 +80,7 @@
       "UpstreamPathTemplate": "/profile/preferences",
       "UpstreamHttpMethod": ["PUT"],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "JwtBearer",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     }

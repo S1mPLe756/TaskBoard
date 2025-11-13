@@ -1,4 +1,5 @@
 using System.Net;
+using AuthService.Application.DTOs;
 using AutoMapper;
 using ExceptionService;
 using UserProfile.Application.DTOs.Requestes;
@@ -30,8 +31,12 @@ public class UserProfileService : IUserProfileService
         return profile;
     }
 
-    public async Task<Profile?> GetProfileAsync(Guid userId)
-        => await _profileRepo.GetByUserIdAsync(userId);
+    public async Task<ProfileDto?> GetProfileAsync(Guid userId)
+    {
+        var profile = await _profileRepo.GetByUserIdAsync(userId);
+        
+        return _mapper.Map<ProfileDto>(profile);
+    }
 
     public async Task UpdatePreferencesAsync(UserPreferencesUpdateDto dto)
     {

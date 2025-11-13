@@ -1,3 +1,4 @@
+using AuthService.Application.DTOs;
 using UserProfile.Application.DTOs.Requestes;
 using UserProfile.Domain.Entities;
 
@@ -7,7 +8,7 @@ public interface IUserProfileService
 {
     Task<Profile> CreateProfileAsync(UserProfileDto dto);
 
-    Task<Profile?> GetProfileAsync(Guid userId);
+    Task<ProfileDto?> GetProfileAsync(Guid userId);
 
     Task UpdatePreferencesAsync(UserPreferencesUpdateDto dto);
 }

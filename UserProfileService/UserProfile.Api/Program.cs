@@ -1,8 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
 using ExceptionService;
 using LoggingService.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Shared.Middleware;
 using UserProfile.Application.Interfaces;
 using UserProfile.Application.Mapping;
 using UserProfile.Application.Services;
@@ -51,7 +55,27 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
 
+        // токен только парсится, без проверки подписи и срока
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = false,
+            SignatureValidator = (token, parameters) =>
+                new JwtSecurityToken(token) // просто парсит токен
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<UserProfileDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -87,7 +111,9 @@ app.UseExceptionService();
 app.UseTaskBoardLoggingModule();
 
 app.UseHttpsRedirection();
+app.UseGatewayUser();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

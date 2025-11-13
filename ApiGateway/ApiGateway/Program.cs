@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System.Text;
+using ApiGateway;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 
@@ -11,7 +12,7 @@ var key = Convert.FromBase64String(builder.Configuration["Jwt:Key"]);
 IdentityModelEventSource.ShowPII = true;
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer("JwtBearer", options =>
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.Events = new JwtBearerEvents
         {
@@ -38,9 +39,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 builder.Services.AddOpenApi();
+builder.Services.AddTransient<AddUserIdDelegatingHandler>();
 
 
-builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot(builder.Configuration).AddDelegatingHandler<AddUserIdDelegatingHandler>(true);
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 
 
