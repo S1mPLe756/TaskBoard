@@ -11,5 +11,5 @@ public class AuthMappingProfile : Profile
         CreateMap<RegisterRequestDto, User>()
             .ForMember(dest => dest.Password, opt => opt.Ignore());
 
-        }
+    }
 }

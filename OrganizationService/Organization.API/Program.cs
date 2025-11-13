@@ -5,29 +5,26 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Organization.Application.Interfaces;
+using Organization.Application.Mappings;
+using Organization.Application.Services;
+using Organization.Domain.Interfaces;
+using Organization.Infrastructure.DbContext;
+using Organization.Infrastructure.Repositories;
 using Serilog;
 using Shared.Middleware;
-using UserProfile.Application.Interfaces;
-using UserProfile.Application.Mapping;
-using UserProfile.Application.Services;
-using UserProfile.Domain.Interfaces;
-using UserProfile.Infrastructure.DbContext;
-using UserProfile.Infrastructure.Messaging.Consumers;
-using UserProfile.Infrastructure.Repositories;
-using UserProfile.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API Profile",
+        Title = "API Organization",
         Version = "v1",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -55,6 +52,10 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+builder.Services.AddDbContext<OrganizationDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,27 +75,23 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddAuthorization();
-
-builder.Services.AddDbContext<UserProfileDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
 
-builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-builder.Services.AddScoped<IUserPreferencesRepository, UserPreferencesRepository>();
+builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
 
-builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
+builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
+builder.Services.AddScoped<IInvitationService, InvitationService>();
 
-builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddAutoMapper(typeof(WorkspaceMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(InvitationMapperProfile).Assembly);
 
-builder.Services.AddAutoMapper(typeof(ProfileMappingProfile).Assembly);
-builder.Services.AddHostedService<UserRegisteredConsumer>();
+builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -110,6 +107,7 @@ app.UseExceptionService();
 app.UseTaskBoardLoggingModule();
 
 app.UseHttpsRedirection();
+
 app.UseGatewayUser();
 
 app.UseAuthentication();

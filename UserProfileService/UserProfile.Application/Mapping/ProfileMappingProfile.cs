@@ -5,9 +5,9 @@ using Profile = AutoMapper.Profile;
 
 namespace UserProfile.Application.Mapping;
 
-public class AuthMappingProfile : Profile
+public class ProfileMappingProfile : Profile
 {
-    public AuthMappingProfile()
+    public ProfileMappingProfile()
     {
         CreateMap<UserProfileDto, UserProfile.Domain.Entities.Profile>();
         CreateMap<UserPreferencesUpdateDto, UserPreferences>();
