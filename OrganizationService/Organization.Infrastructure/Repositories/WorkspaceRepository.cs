@@ -20,7 +20,7 @@ public class WorkspaceRepository : IWorkspaceRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Workspace?> GetByIdAsync(Guid workspaceId) => await _dbContext.Workspaces.FirstOrDefaultAsync(w=> w.Id == workspaceId);
+    public async Task<Workspace?> GetByIdAsync(Guid workspaceId) => await _dbContext.Workspaces.Include(x=>x.Members).FirstOrDefaultAsync(w=> w.Id == workspaceId);
 
     public async Task<List<Workspace>> GetByUserIdAsync(Guid userId) => await _dbContext.Workspaces.Where(w=> w.OwnerId == userId || w.Members.Any(m => m.UserId == userId)).ToListAsync();
 

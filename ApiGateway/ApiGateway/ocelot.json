@@ -153,6 +153,20 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Notification/email",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Notification",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5105 }
+      ],
+      "UpstreamPathTemplate": "/notification/email",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
     
   ],
@@ -197,6 +211,16 @@
           "Name": "API Organization",
           "Version": "v1",
           "Url": "http://localhost:5104/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Notification",
+      "Config": [
+        {
+          "Name": "API Notification",
+          "Version": "v1",
+          "Url": "http://localhost:5105/swagger/v1/swagger.json"
         }
       ]
     }

@@ -5,6 +5,7 @@ using Organization.Application.DTOs;
 using Organization.Application.Interfaces;
 using Organization.Domain.Entities;
 using Organization.Domain.Enums;
+using Organization.Domain.Events;
 using Organization.Domain.Interfaces;
 
 namespace Organization.Application.Services;
@@ -14,16 +15,18 @@ public class InvitationService : IInvitationService
     private IInvitationRepository _repository;
     private IWorkspaceRepository _workspaceRepository;
     private IMapper _mapper;
+    private IEventPublisher _eventPublisher;
 
-    public InvitationService(IInvitationRepository repository, IWorkspaceRepository workspaceRepository, IMapper mapper)
+    public InvitationService(IInvitationRepository repository, IWorkspaceRepository workspaceRepository, IMapper mapper, IEventPublisher eventPublisher)
     {
         _repository = repository;
         _workspaceRepository = workspaceRepository;
         _mapper = mapper;
+        _eventPublisher = eventPublisher;
     }
 
     
-    public async Task<InvitationDto> CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role)
+    public async Task<InvitationResponse> CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role)
     {
         var ws = await _workspaceRepository.GetByIdAsync(workspaceId);
         if (ws == null) throw new AppException("Workspace not found", HttpStatusCode.NotFound);
@@ -36,8 +39,13 @@ public class InvitationService : IInvitationService
             ExpiresAt = DateTime.UtcNow.AddDays(7)
         };
         await _repository.AddAsync(inv);
-
-        return _mapper.Map<InvitationDto>(inv);
+        await _eventPublisher.PublishInvitationSendAsync(new InvitationSendEvent()
+        {
+            Email = email,
+            InvitationId = inv.Id,
+            OrganizationName = ws.Name
+        });
+        return _mapper.Map<InvitationResponse>(inv);
     }
 
     public async Task AcceptInvitationAsync(Guid invitationId, Guid userId)
@@ -53,9 +61,9 @@ public class InvitationService : IInvitationService
         await _workspaceRepository.UpdateAsync(ws);
     }
 
-    public async Task<List<InvitationDto>> GetPendingInvitationsAsync(string email)
+    public async Task<List<InvitationResponse>> GetPendingInvitationsAsync(string email)
     {
         var list = await _repository.GetPendingByEmailAsync(email);
-        return list.Select(inv => _mapper.Map<InvitationDto>(inv)).ToList();
+        return list.Select(inv => _mapper.Map<InvitationResponse>(inv)).ToList();
     }
 }

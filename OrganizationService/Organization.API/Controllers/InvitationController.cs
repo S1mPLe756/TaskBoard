@@ -17,7 +17,7 @@ public class InvitationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Invite([FromBody] CreateInvitationRequestDto dto)
+    public async Task<IActionResult> Invite([FromBody] CreateInvitationRequest dto)
     {
         var invitation = await _invitationService.CreateInvitationAsync(dto.WorkspaceId, dto.Email, dto.Role);
         return Ok(invitation);

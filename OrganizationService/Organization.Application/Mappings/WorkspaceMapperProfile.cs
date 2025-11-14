@@ -8,13 +8,13 @@ public class WorkspaceMapperProfile : Profile
 {
     public WorkspaceMapperProfile()
     {
-        CreateMap<WorkspaceDto, Workspace>()
+        CreateMap<WorkspaceResponse, Workspace>()
             .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Members));
-        CreateMap<WorkspaceMemberDto, WorkspaceMember>();
-        CreateMap<Workspace, WorkspaceDto>()
+        CreateMap<WorkspaceMemberResponse, WorkspaceMember>();
+        CreateMap<Workspace, WorkspaceResponse>()
             .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Members));
 
-        CreateMap<WorkspaceMember, WorkspaceMemberDto>();
+        CreateMap<WorkspaceMember, WorkspaceMemberResponse>();
 
     }
 }

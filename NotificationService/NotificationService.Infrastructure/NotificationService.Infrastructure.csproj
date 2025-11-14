@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="2.12.0" />
+        <PackageReference Include="EntityFramework" Version="6.5.1" />
+        <PackageReference Include="MailKit" Version="4.14.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\NotificationService.Application\NotificationService.Application.csproj" />
+      <ProjectReference Include="..\NotificationService.Domain\NotificationService.Domain.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="ExceptionService">
+        <HintPath>..\..\..\.nuget\packages\exceptionservice\1.0.5\lib\net9.0\ExceptionService.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

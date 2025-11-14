@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Organization.Application.Interfaces;
-using Organization.Application.Mappings;
-using Organization.Application.Services;
-using Organization.Domain.Interfaces;
-using Organization.Infrastructure.DbContext;
-using Organization.Infrastructure.Messaging;
-using Organization.Infrastructure.Repositories;
+using NotificationService.Application.Interfaces;
+using NotificationService.Application.Mappings;
+using NotificationService.Domain.Interfaces;
+using NotificationService.Infrastructure.DbContext;
+using NotificationService.Infrastructure.Messaging.Consumers;
+using NotificationService.Infrastructure.Repositories;
+using NotificationService.Infrastructure.Senders;
+using NotificationService.Infrastructure.Settings;
 using Serilog;
 using Shared.Middleware;
 
@@ -25,7 +26,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API Organization",
+        Title = "API Notification",
         Version = "v1",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -54,7 +55,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<OrganizationDbContext>(opt =>
+builder.Services.AddDbContext<NotificationDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(options =>
@@ -80,18 +81,17 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
 
-builder.Services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
-builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
-builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
-builder.Services.AddScoped<IInvitationService, InvitationService>();
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
-builder.Services.AddAutoMapper(typeof(WorkspaceMapperProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(InvitationMapperProfile).Assembly);
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddScoped<INotificationService, NotificationService.Application.Services.NotificationService>();
 
-builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
+builder.Services.AddAutoMapper(typeof(NotificationMapperProfile).Assembly);
 
-builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
+builder.Services.AddHostedService<NotificationEmailSendConsumer>();
 
 var app = builder.Build();
 

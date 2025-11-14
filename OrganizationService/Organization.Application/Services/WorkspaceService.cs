@@ -20,14 +20,14 @@ public class WorkspaceService : IWorkspaceService
         _mapper = mapper;
     }
     
-    public async Task<WorkspaceDto> CreateWorkspaceAsync(Guid ownerId, string name)
+    public async Task<WorkspaceResponse> CreateWorkspaceAsync(Guid ownerId, string name)
     {
         var ws = new Workspace { Id = Guid.NewGuid(), Name = name, OwnerId = ownerId };
         await _repository.AddAsync(ws);
-        return _mapper.Map<WorkspaceDto>(ws);
+        return _mapper.Map<WorkspaceResponse>(ws);
     }
 
-    public async Task<WorkspaceDto> GetWorkspaceAsync(Guid workspaceId)
+    public async Task<WorkspaceResponse> GetWorkspaceAsync(Guid workspaceId)
     {
         var workspace = await _repository.GetByIdAsync(workspaceId);
         if (workspace == null)
@@ -35,17 +35,17 @@ public class WorkspaceService : IWorkspaceService
             throw new AppException("Workspace not found", HttpStatusCode.NotFound);
         }
         
-        return _mapper.Map<WorkspaceDto>(workspace);
+        return _mapper.Map<WorkspaceResponse>(workspace);
     }
 
-    public async Task<List<WorkspaceDto>> GetUserWorkspacesAsync(Guid userId)
+    public async Task<List<WorkspaceResponse>> GetUserWorkspacesAsync(Guid userId)
     {
         var workspaces = await _repository.GetByUserIdAsync(userId);
         
-        return workspaces.Select(_mapper.Map<WorkspaceDto>).ToList();
+        return workspaces.Select(_mapper.Map<WorkspaceResponse>).ToList();
     }
 
-    public async Task<WorkspaceMemberDto> AddMemberAsync(Guid workspaceId, Guid userId, WorkspaceRole role)
+    public async Task<WorkspaceMemberResponse> AddMemberAsync(Guid workspaceId, Guid userId, WorkspaceRole role)
     {
         var ws = await _repository.GetByIdAsync(workspaceId);
         if (ws == null) throw new AppException("Workspace not found", HttpStatusCode.NotFound);
@@ -56,7 +56,7 @@ public class WorkspaceService : IWorkspaceService
         ws.Members.Add(member);
         await _repository.UpdateAsync(ws);
 
-        return _mapper.Map<WorkspaceMemberDto>(member);
+        return _mapper.Map<WorkspaceMemberResponse>(member);
     }
 
     public async Task RemoveMemberAsync(Guid workspaceId, Guid userId)

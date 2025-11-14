@@ -36,7 +36,6 @@ builder.Host.UseSerilog();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
-
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService.Application.Services.AuthService>();

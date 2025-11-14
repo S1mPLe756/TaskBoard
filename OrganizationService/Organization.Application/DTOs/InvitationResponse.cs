@@ -2,7 +2,7 @@ using Organization.Domain.Enums;
 
 namespace Organization.Application.DTOs;
 
-public class InvitationDto
+public class InvitationResponse
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

@@ -32,7 +32,7 @@ public class WorkspaceController : ControllerBase
     }
 
     [HttpPost("{workspaceId:guid}/members")]
-    public async Task<IActionResult> AddMember(Guid workspaceId, [FromBody] AddMemberRequestDto dto)
+    public async Task<IActionResult> AddMember(Guid workspaceId, [FromBody] AddMemberRequest dto)
     {
         var member = await _workspaceService.AddMemberAsync(workspaceId, dto.UserId, dto.Role);
         return Ok(member);

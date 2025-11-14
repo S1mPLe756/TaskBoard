@@ -8,8 +8,8 @@ public class InvitationMapperProfile : Profile
 {
     public InvitationMapperProfile()
     {
-        CreateMap<InvitationDto, Invitation>();
-        CreateMap<Invitation, InvitationDto>();
+        CreateMap<InvitationResponse, Invitation>();
+        CreateMap<Invitation, InvitationResponse>();
 
     }
 }

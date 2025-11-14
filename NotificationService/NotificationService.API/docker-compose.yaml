@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  notification_db:
+    image: postgres:16.3-alpine
+    container_name: notification_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - "notification_db:/var/lib/postgresql/data"
+    networks:
+      - notification_service
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+volumes:
+  notification_db:
+    name: notification_db
+
+
+networks:
+  notification_service:
+    external: false
