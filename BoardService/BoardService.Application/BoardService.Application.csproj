@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="12.0.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\BoardService.Domain\BoardService.Domain.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="ExceptionService">
+        <HintPath>..\..\..\.nuget\packages\exceptionservice\1.0.5\lib\net9.0\ExceptionService.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
