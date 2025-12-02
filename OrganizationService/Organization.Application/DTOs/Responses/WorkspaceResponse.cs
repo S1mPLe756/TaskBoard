@@ -1,4 +1,4 @@
-namespace Organization.Application.DTOs;
+namespace Organization.Application.DTOs.Responses;
 
 public class WorkspaceResponse
 {

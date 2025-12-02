@@ -45,5 +45,27 @@ public class SmtpEmailSender : IEmailSender
             throw new AppException($"При отправке сообщения произошла ошибка: {e.Message}");
         }
     }
+    
+    public async Task CheckConnectionAsync()
+    {
+
+        using var client = new SmtpClient();
+
+        try
+        {
+            var port = _settings.Port;
+            var secureOption = port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls;
+
+            await client.ConnectAsync(_settings.Host, port, secureOption);
+
+            await client.AuthenticateAsync(_settings.Username, _settings.Password);
+            
+            await client.DisconnectAsync(true);
+        }
+        catch (Exception e)
+        {
+            throw new AppException($"При отправке сообщения произошла ошибка: {e.Message}");
+        }
+    }
 
 }

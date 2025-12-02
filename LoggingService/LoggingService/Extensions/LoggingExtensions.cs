@@ -21,35 +21,46 @@ public static class LoggingExtensions
         var esUser = config["Elastic:Username"] ?? "elastic";
         var esPass = config["Elastic:Password"] ?? "changeme";
         var serviceName = config["Elastic:ServiceName"] ?? "default";
-
-        Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
-            .Enrich.WithEnvironmentName()
-            .Enrich.FromLogContext()
-            .Enrich.WithMachineName()
-            .Enrich.WithProperty("ServiceName", serviceName)
-            .WriteTo.Console()
-            .WriteTo.Debug()
-            .WriteTo.Elasticsearch([new Uri(esUri)], opts =>
-            {
-                opts.DataStream = new DataStreamName("logs", "task-board", serviceName);
-                opts.ChannelDiagnosticsCallback = (channel) => Console.Write(channel.ObservedException);
-                opts.BootstrapMethod = BootstrapMethod.Failure;
-                opts.ConfigureChannel = channelOpts =>
+        try
+        {   
+            Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
+                .Enrich.WithEnvironmentName()
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProperty("ServiceName", serviceName)
+                .WriteTo.Console()
+                .WriteTo.Debug()
+                .WriteTo.Elasticsearch([new Uri(esUri)], opts =>
                 {
-                    channelOpts.BufferOptions = new BufferOptions
+                    opts.DataStream = new DataStreamName("logs", "task-board", serviceName);
+                    opts.ChannelDiagnosticsCallback = (channel) => Console.Write(channel.ObservedException);
+                    opts.BootstrapMethod = BootstrapMethod.Failure;
+                    opts.ConfigureChannel = channelOpts =>
                     {
-                        ExportMaxConcurrency = 10
+                        channelOpts.BufferOptions = new BufferOptions
+                        {
+                            ExportMaxConcurrency = 10
+                        };
                     };
-                };
-            }, transport =>
-            {
-                transport.Authentication(new BasicAuthentication(esUser, esPass));
-                transport.ServerCertificateValidationCallback((o, cert, chain, errors) => true);
-                transport.RequestTimeout(TimeSpan.FromSeconds(10));
-                transport.DisableDirectStreaming();
-                transport.EnableDebugMode();
-                transport.DisablePing();
-            }).CreateLogger();
+                }, transport =>
+                {
+                    transport.Authentication(new BasicAuthentication(esUser, esPass));
+                    transport.ServerCertificateValidationCallback((o, cert, chain, errors) => true);
+                    transport.RequestTimeout(TimeSpan.FromSeconds(5));
+                    transport.DisableDirectStreaming();
+                    transport.EnableDebugMode();
+                    transport.DisablePing();
+                }).CreateLogger();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Elastic sink unavailable: {ex.Message}");
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Debug()
+                .CreateLogger();
+        }
         Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine(msg));
 
         services.AddSingleton<ProxyGenerator>();

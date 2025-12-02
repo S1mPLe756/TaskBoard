@@ -1,4 +1,5 @@
 using AuthService.Application.DTOs;
+using AuthService.Application.DTOs.Responses;
 using AuthService.Domain.Entities;
 
 namespace AuthService.Application.Interfaces;

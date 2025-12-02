@@ -1,5 +1,6 @@
 using System.Net;
 using AuthService.Application.DTOs;
+using AuthService.Application.DTOs.Responses;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
 using AuthService.Domain.Interfaces;

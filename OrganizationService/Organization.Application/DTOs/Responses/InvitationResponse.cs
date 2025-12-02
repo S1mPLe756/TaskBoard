@@ -1,6 +1,6 @@
 using Organization.Domain.Enums;
 
-namespace Organization.Application.DTOs;
+namespace Organization.Application.DTOs.Responses;
 
 public class InvitationResponse
 {

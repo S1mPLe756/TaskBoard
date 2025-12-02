@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Application.DTOs;
+using Organization.Application.DTOs.Requestes;
 using Organization.Application.Interfaces;
 
 namespace Organization.API.Controllers;

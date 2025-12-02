@@ -6,9 +6,13 @@ using AuthService.Infrastructure.DbContext;
 using AuthService.Infrastructure.Messaging.Producers;
 using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
+using Confluent.Kafka;
+using DotNetEnv;
 using ExceptionService;
 using LoggingService.Extensions;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -26,12 +30,29 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+Env.Load();
+builder.Configuration.AddEnvironmentVariables();
+
+
 builder.Services.AddDbContext<AuthDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
 
+builder.Services.AddHealthChecks()
+    .AddKafka(
+        config: new ProducerConfig()
+        {
+            BootstrapServers = builder.Configuration["Kafka:BootstrapServers"],
+            RequestTimeoutMs = 5
+        },
+        name: "KafkaBroker",
+        timeout: TimeSpan.FromSeconds(5),
+        failureStatus: HealthStatus.Unhealthy,
+        tags: ["message-broker"]
+    )
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Auth DB");
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
@@ -57,6 +78,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHealthChecks("/api/v1/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = new
+        {
+            status = report.Status.ToString(),
+            services = report.Entries.Select(e => new
+            {
+                serviceName = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Status != HealthStatus.Healthy ? e.Key + " is unreachable" : e.Value.Description,
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
 
 app.UseExceptionService();
 app.UseTaskBoardLoggingModule();

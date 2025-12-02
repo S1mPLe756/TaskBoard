@@ -1,8 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
+using Confluent.Kafka;
+using DotNetEnv;
 using ExceptionService;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Organization.Application.Interfaces;
@@ -19,6 +23,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+
+Env.Load();
+builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddHealthChecks()
+    .AddKafka(
+        config: new ProducerConfig()
+        {
+            BootstrapServers = builder.Configuration["Kafka:BootstrapServers"],
+            RequestTimeoutMs = 5
+        },
+        name: "KafkaBroker",
+        timeout: TimeSpan.FromSeconds(5),
+        failureStatus: HealthStatus.Unhealthy,
+        tags: ["message-broker"]
+    )
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Organization DB");
+
 
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
@@ -105,6 +127,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHealthChecks("/api/v1/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = new
+        {
+            status = report.Status.ToString(),
+            services = report.Entries.Select(e => new
+            {
+                serviceName = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Status != HealthStatus.Healthy ? e.Key + " is unreachable" : e.Value.Description,
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
 
 app.UseExceptionService();
 app.UseTaskBoardLoggingModule();

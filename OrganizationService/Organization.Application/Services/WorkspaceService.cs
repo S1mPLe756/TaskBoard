@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using ExceptionService;
 using Organization.Application.DTOs;
+using Organization.Application.DTOs.Responses;
 using Organization.Application.Interfaces;
 using Organization.Domain.Entities;
 using Organization.Domain.Enums;

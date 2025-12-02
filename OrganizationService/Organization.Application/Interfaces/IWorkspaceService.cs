@@ -1,4 +1,5 @@
 using Organization.Application.DTOs;
+using Organization.Application.DTOs.Responses;
 using Organization.Domain.Enums;
 
 namespace Organization.Application.Interfaces;

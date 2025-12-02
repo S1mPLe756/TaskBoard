@@ -1,5 +1,6 @@
 using AutoMapper;
 using Organization.Application.DTOs;
+using Organization.Application.DTOs.Responses;
 using Organization.Domain.Entities;
 
 namespace Organization.Application.Mappings;

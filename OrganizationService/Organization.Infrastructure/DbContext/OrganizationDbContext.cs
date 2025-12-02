@@ -18,13 +18,7 @@ public class OrganizationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<WorkspaceMember>(builder =>
-        {
-            builder.HasKey(u => u.Id);
-            builder.Property(u => u.UserId).IsRequired();
-            
-        });
+        
 
         modelBuilder.Entity<WorkspaceMember>(builder =>
         {

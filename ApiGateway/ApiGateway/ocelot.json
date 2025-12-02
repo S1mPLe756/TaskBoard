@@ -1,12 +1,26 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/v1/Health",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Health",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5000 }],
+      "UpstreamPathTemplate": "/api/v1/Health",
+      "UpstreamHttpMethod": ["GET"],
+      "DelegatingHandlers": ["RateLimitHandler"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Auth/login",
       "DownstreamScheme": "http",
       "SwaggerKey": "Auth",
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": ["POST"],
+      "DelegatingHandlers": ["RateLimitHandler"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "",
         "AllowedScopes": []

@@ -48,8 +48,9 @@ public class JwtTokenProvider : IJwtTokenProvider
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email)
         };
+        var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-        var key = new SymmetricSecurityKey(Convert.FromBase64String(_config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Convert.FromBase64String(jwtSecret!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
