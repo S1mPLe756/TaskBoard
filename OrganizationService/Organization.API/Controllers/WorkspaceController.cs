@@ -16,12 +16,21 @@ public class WorkspaceController : ControllerBase
     {
         _workspaceService = workspaceService;
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] string name)
+    
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyWorkspaces()
     {
         var ownerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var workspace = await _workspaceService.CreateWorkspaceAsync(ownerId, name);
+
+        var workspace = await _workspaceService.GetUserWorkspacesAsync(ownerId);
+        return Ok(workspace);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateWorkspaceRequest request)
+    {
+        var ownerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var workspace = await _workspaceService.CreateWorkspaceAsync(ownerId, request);
         return Ok(workspace);
     }
 

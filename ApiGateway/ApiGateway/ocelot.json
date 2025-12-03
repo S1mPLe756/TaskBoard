@@ -20,7 +20,6 @@
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": ["POST"],
-      "DelegatingHandlers": ["RateLimitHandler"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "",
         "AllowedScopes": []
@@ -87,11 +86,35 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Profile",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "UserProfile",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "UpstreamPathTemplate": "/profile",
+      "UpstreamHttpMethod": ["GET"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Profile/preferences",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
       "UpstreamPathTemplate": "/profile/preferences",
+      "UpstreamHttpMethod": ["PUT"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Profile",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "UserProfile",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "UpstreamPathTemplate": "/profile",
       "UpstreamHttpMethod": ["PUT"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -105,8 +128,22 @@
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/workspaces",
+      "UpstreamPathTemplate": "/workspace",
       "UpstreamHttpMethod": [ "POST", "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Workspace/my",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Organization",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5104 }
+      ],
+      "UpstreamPathTemplate": "/workspace/my",
+      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -119,7 +156,7 @@
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/Workspace/{workspaceId}",
+      "UpstreamPathTemplate": "/workspace/{workspaceId}",
       "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -133,7 +170,7 @@
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/workspaces/{workspaceId}/members",
+      "UpstreamPathTemplate": "/workspace/{workspaceId}/members",
       "UpstreamHttpMethod": [ "POST", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -147,7 +184,7 @@
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/invitations",
+      "UpstreamPathTemplate": "/invitation",
       "UpstreamHttpMethod": [ "POST", "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -161,7 +198,7 @@
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/invitations/{invitationId}/accept",
+      "UpstreamPathTemplate": "/invitation/{invitationId}/accept",
       "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

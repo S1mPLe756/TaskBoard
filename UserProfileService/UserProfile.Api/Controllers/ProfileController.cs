@@ -25,6 +25,27 @@ public class ProfileController : ControllerBase
         return Ok(await _service.GetProfileAsync(userId));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetMyProfile()
+    {
+        var jwtUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (jwtUserId == null) return Forbid();
+
+        return Ok(await _service.GetProfileAsync(Guid.Parse(jwtUserId)));
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateMyProfile(UpdateUserProfileDto dto)
+    {
+        var jwtUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (jwtUserId == null) return Forbid();
+
+        
+        return Ok(await _service.UpdateProfileAsync(dto, Guid.Parse(jwtUserId)));
+    }
+    
     private bool IsYourProfile(Guid userId)
     {
         var jwtUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

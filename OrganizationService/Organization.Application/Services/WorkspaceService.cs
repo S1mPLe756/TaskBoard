@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using ExceptionService;
 using Organization.Application.DTOs;
+using Organization.Application.DTOs.Requestes;
 using Organization.Application.DTOs.Responses;
 using Organization.Application.Interfaces;
 using Organization.Domain.Entities;
@@ -21,9 +22,12 @@ public class WorkspaceService : IWorkspaceService
         _mapper = mapper;
     }
     
-    public async Task<WorkspaceResponse> CreateWorkspaceAsync(Guid ownerId, string name)
+    public async Task<WorkspaceResponse> CreateWorkspaceAsync(Guid ownerId, CreateWorkspaceRequest request)
     {
-        var ws = new Workspace { Id = Guid.NewGuid(), Name = name, OwnerId = ownerId };
+        var ws = _mapper.Map<Workspace>(request);
+        
+        ws.OwnerId = ownerId;
+        
         await _repository.AddAsync(ws);
         return _mapper.Map<WorkspaceResponse>(ws);
     }

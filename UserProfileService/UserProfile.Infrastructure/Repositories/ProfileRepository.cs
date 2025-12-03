@@ -24,4 +24,10 @@ public class ProfileRepository : IProfileRepository
         _context.UserProfiles.Add(profile);
         await _context.SaveChangesAsync();
     }
+
+    public async Task UpdateAsync(Profile profile)
+    {
+        _context.UserProfiles.Update(profile);
+        await _context.SaveChangesAsync();
+    }
 }

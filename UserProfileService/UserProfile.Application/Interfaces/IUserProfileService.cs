@@ -6,9 +6,11 @@ namespace UserProfile.Application.Interfaces;
 
 public interface IUserProfileService
 {
-    Task<Profile> CreateProfileAsync(UserProfileDto dto);
+    Task<ProfileDto> CreateProfileAsync(UserProfileDto dto);
 
     Task<ProfileDto?> GetProfileAsync(Guid userId);
 
+    Task<ProfileDto> UpdateProfileAsync(UpdateUserProfileDto dto, Guid userId);
+    
     Task UpdatePreferencesAsync(UserPreferencesUpdateDto dto);
 }

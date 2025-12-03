@@ -12,6 +12,8 @@ public class ProfileMappingProfile : Profile
         CreateMap<UserProfileDto, UserProfile.Domain.Entities.Profile>();
         CreateMap<UserPreferencesUpdateDto, UserPreferences>();
 
+        CreateMap<UpdateUserProfileDto, UserProfile.Domain.Entities.Profile>();
+
         CreateMap<UserProfile.Domain.Entities.Profile, ProfileDto>().ForMember(
             dest => dest.Preferences, opt => opt.MapFrom(src => src.Preferences));
         CreateMap<UserPreferences, UserPreferencesDto>();

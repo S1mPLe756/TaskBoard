@@ -53,7 +53,6 @@ public class UserRegisteredConsumer : BackgroundService
                 var dto = new UserProfileDto
                 {
                     UserId = message.UserId,
-                    Email = message.Email,
                 };
                 
                 await service.CreateProfileAsync(dto);

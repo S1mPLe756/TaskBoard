@@ -31,7 +31,7 @@ Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-var key = Encoding.ASCII.GetBytes(jwtSecret);
+var key = Convert.FromBase64String(jwtSecret);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>

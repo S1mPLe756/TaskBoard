@@ -22,14 +22,31 @@ public class UserProfileService : IUserProfileService
         _mapper = mapper;
     }
 
-    public async Task<Profile> CreateProfileAsync(UserProfileDto dto)
+    public async Task<ProfileDto> CreateProfileAsync(UserProfileDto dto)
     {
        
         var profile = _mapper.Map<Profile>(dto);
 
         await _profileRepo.AddAsync(profile);
-        return profile;
+        return _mapper.Map<ProfileDto>(profile);
     }
+    
+    public async Task<ProfileDto> UpdateProfileAsync(UpdateUserProfileDto dto, Guid userId)
+    {
+        var profile = await _profileRepo.GetByUserIdAsync(userId);
+
+        if (profile == null)
+        {
+            throw new AppException("Profile not found", HttpStatusCode.NotFound);
+        }
+        
+        profile = _mapper.Map(dto, profile);    
+        
+        await _profileRepo.UpdateAsync(profile);
+        
+        return _mapper.Map<ProfileDto>(profile);
+    }
+
 
     public async Task<ProfileDto?> GetProfileAsync(Guid userId)
     {
