@@ -8,5 +8,6 @@ public class Board
     public bool IsArchived { get; set; }
 
     public List<BoardColumn> Columns { get; set; } = new();
-
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

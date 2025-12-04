@@ -1,7 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using BoardService.Application.Interfaces;
 using BoardService.Application.Mappings;
+using BoardService.Application.Services;
 using BoardService.Domain.Interfaces;
+using BoardService.Infrastructure;
 using BoardService.Infrastructure.DbContext;
 using BoardService.Infrastructure.Repositories;
 using Confluent.Kafka;
@@ -96,13 +98,16 @@ builder.Services.AddDbContext<BoardDbContext>(opt =>
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
 
-
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
+builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
 
 builder.Services.AddScoped<IBoardService, BoardService.Application.Services.BoardService>();
+builder.Services.AddScoped<IColumnService, ColumnService>();
 
 builder.Services.AddAutoMapper(typeof(BoardMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(ColumnMapperProfile).Assembly);
 
 // builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 

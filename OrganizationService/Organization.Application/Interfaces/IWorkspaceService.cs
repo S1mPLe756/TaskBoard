@@ -12,4 +12,6 @@ public interface IWorkspaceService
     Task<List<WorkspaceResponse>> GetUserWorkspacesAsync(Guid userId);
     Task<WorkspaceMemberResponse> AddMemberAsync(Guid workspaceId, Guid userId, WorkspaceRole role);
     Task RemoveMemberAsync(Guid workspaceId, Guid userId);
+    Task<bool> CanChangeWorkspaceAsync(Guid userId, Guid workspaceId);
+
 }

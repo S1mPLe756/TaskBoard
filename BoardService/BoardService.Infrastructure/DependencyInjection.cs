@@ -10,14 +10,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Refit клиент (инфраструктурная деталь)
         services.AddRefitClient<IOrganizationApiRefitClient>()
             .ConfigureHttpClient(client => 
             {
                 client.BaseAddress = new Uri(configuration["ExternalServices:OrganizationApi"]);
             });
 
-        // Реализация доменной абстракции
         services.AddScoped<IOrganizationApiClient, OrganizationApiClient>();
 
         return services;

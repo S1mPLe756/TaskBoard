@@ -14,7 +14,8 @@ public class BoardRepository : IBoardRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Board?> GetBoardByIdAsync(Guid id) => await _dbContext.Boards.Include(b=>b.Columns).FirstOrDefaultAsync(x=>x.Id == id);
+    public async Task<Board?> GetBoardByIdAsync(Guid id) =>
+        await _dbContext.Boards.Include(b => b.Columns).FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task AddBoardAsync(Board board)
     {
@@ -27,4 +28,7 @@ public class BoardRepository : IBoardRepository
         _dbContext.Boards.Update(board);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<Board>> GetBoardsByWorkspaceAsync(Guid workspaceId) =>
+        await _dbContext.Boards.Include(b => b.Columns).Where(x => x.WorkspaceId == workspaceId).ToListAsync();
 }

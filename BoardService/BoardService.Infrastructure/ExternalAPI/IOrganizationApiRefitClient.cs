@@ -4,7 +4,7 @@ namespace BoardService.Domain.Interfaces;
 
 public interface IOrganizationApiRefitClient
 {
-    [Post("/api/v1/Organizations/{workspaceId}/can-create-board")]
-    Task<bool> CanCreateBoardAsync(Guid workspaceId, [Body] Guid userId);
+    [Get("/api/v1/Workspace/{workspaceId}/can-change-workspace/{userId}")]
+    Task<bool> CanCreateBoardAsync(Guid workspaceId, Guid userId);
 
 }

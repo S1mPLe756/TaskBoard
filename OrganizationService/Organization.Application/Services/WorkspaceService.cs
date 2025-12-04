@@ -32,6 +32,16 @@ public class WorkspaceService : IWorkspaceService
         return _mapper.Map<WorkspaceResponse>(ws);
     }
 
+    
+    public async Task<bool> CanChangeWorkspaceAsync(Guid userId, Guid workspaceId)
+    {
+        var ws = await _repository.GetByIdAsync(workspaceId);
+        
+        if (ws == null) return false;
+        
+        return ws.OwnerId == userId || ws.Members.Any(x => x.Id == userId && x.Role == WorkspaceRole.Admin);
+    }
+    
     public async Task<WorkspaceResponse> GetWorkspaceAsync(Guid workspaceId)
     {
         var workspace = await _repository.GetByIdAsync(workspaceId);

@@ -178,6 +178,20 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Workspace/{workspaceId}/can-change-workspace",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Organization",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5104 }
+      ],
+      "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Invitation",
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
@@ -214,6 +228,62 @@
       ],
       "UpstreamPathTemplate": "/notification/email",
       "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Board",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Board",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5106 }
+      ],
+      "UpstreamPathTemplate": "/board",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Column/{boardId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Board",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5106 }
+      ],
+      "UpstreamPathTemplate": "/column/{boardId}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Board/{boardId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Board",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5106 }
+      ],
+      "UpstreamPathTemplate": "/board/{boardId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Board/workspace/{workspaceId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Board",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5106 }
+      ],
+      "UpstreamPathTemplate": "/board/workspace/{workspaceId}",
+      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -272,6 +342,16 @@
           "Name": "API Notification",
           "Version": "v1",
           "Url": "http://localhost:5105/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Board",
+      "Config": [
+        {
+          "Name": "API Board",
+          "Version": "v1",
+          "Url": "http://localhost:5106/swagger/v1/swagger.json"
         }
       ]
     }

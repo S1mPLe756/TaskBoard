@@ -23,4 +23,23 @@ public class BoardController : ControllerBase
 
         return Ok(await _boardService.CreateBoardAsync(userId, request));
     }
+    
+    
+    [HttpGet("{boardId:guid}")]
+    public async Task<IActionResult> GetBoard(Guid boardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _boardService.GetBoardAsync(userId, boardId));
+    }
+
+    [HttpGet("workspace/{workspaceId:guid}")]
+    public async Task<IActionResult> GetBoardByWorkspace(Guid workspaceId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _boardService.GetBoardByWorkspaceAsync(userId, workspaceId));
+    }
+    
+
 }

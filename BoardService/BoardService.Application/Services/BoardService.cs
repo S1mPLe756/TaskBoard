@@ -35,4 +35,35 @@ public class BoardService : IBoardService
         
         return _mapper.Map<BoardResponse>(board);
     }
+
+    public async Task<BoardResponse> GetBoardAsync(Guid userId, Guid boardId)
+    {
+        var board = await _repository.GetBoardByIdAsync(boardId);
+
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+            
+        if (!await _organizationApiClient.CanCreateBoardAsync(workspaceId: board.WorkspaceId,
+                userId: userId))
+        {
+            throw new AppException("Can't see board", HttpStatusCode.Forbidden);
+        }
+        
+        return _mapper.Map<BoardResponse>(board);
+    }
+
+    public async Task<List<BoardResponse>> GetBoardByWorkspaceAsync(Guid userId, Guid workspaceId)
+    {
+        if (!await _organizationApiClient.CanCreateBoardAsync(workspaceId: workspaceId,
+                userId: userId))
+        {
+            throw new AppException("Can't see boards", HttpStatusCode.Forbidden);
+        }
+        
+        var boards = await _repository.GetBoardsByWorkspaceAsync(workspaceId);
+        
+        return boards.Select(board => _mapper.Map<BoardResponse>(board)).ToList();
+    }
 }
