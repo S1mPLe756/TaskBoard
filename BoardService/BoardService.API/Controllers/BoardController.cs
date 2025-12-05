@@ -34,11 +34,17 @@ public class BoardController : ControllerBase
     }
 
     [HttpGet("workspace/{workspaceId:guid}")]
-    public async Task<IActionResult> GetBoardByWorkspace(Guid workspaceId)
+    public async Task<IActionResult> GetBoardsByWorkspace(Guid workspaceId)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        return Ok(await _boardService.GetBoardByWorkspaceAsync(userId, workspaceId));
+        return Ok(await _boardService.GetBoardsByWorkspaceAsync(userId, workspaceId));
+    }
+
+    [HttpGet("{boardId:guid}/column/{columnId:guid}/exist")]
+    public async Task<IActionResult> IsExistBoardWithColumn(Guid boardId, Guid columnId)
+    {
+        return Ok(await _boardService.IsExistBoardWithColumnAsync(boardId, columnId));
     }
     
 

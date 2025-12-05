@@ -178,13 +178,27 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Workspace/{workspaceId}/can-change-workspace",
+      "DownstreamPathTemplate": "/api/v1/Workspace/{workspaceId}/can-change-workspace/{userId}",
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5104 }
       ],
-      "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace",
+      "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Workspace/{workspaceId}/can-see-workspace/{userId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Organization",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5104 }
+      ],
+      "UpstreamPathTemplate": "/workspace/{workspaceId}/can-see-workspace/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -288,6 +302,20 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Card",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5107 }
+      ],
+      "UpstreamPathTemplate": "/card",
+      "UpstreamHttpMethod": [ "POSt" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
     
   ],
@@ -352,6 +380,16 @@
           "Name": "API Board",
           "Version": "v1",
           "Url": "http://localhost:5106/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Card",
+      "Config": [
+        {
+          "Name": "API Card",
+          "Version": "v1",
+          "Url": "http://localhost:5107/swagger/v1/swagger.json"
         }
       ]
     }

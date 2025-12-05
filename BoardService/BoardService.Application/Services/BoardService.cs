@@ -24,7 +24,7 @@ public class BoardService : IBoardService
     
     public async Task<BoardResponse> CreateBoardAsync(Guid userId, CreateBoardRequest createBoardRequest)
     {
-        if (!await _organizationApiClient.CanCreateBoardAsync(workspaceId: createBoardRequest.WorkspaceId,
+        if (!await _organizationApiClient.CanChangeWorkspaceAsync(workspaceId: createBoardRequest.WorkspaceId,
                 userId: userId))
         {
             throw new AppException("Can't create board", HttpStatusCode.Forbidden);
@@ -45,7 +45,7 @@ public class BoardService : IBoardService
             throw new AppException("Board not found", HttpStatusCode.NotFound);
         }
             
-        if (!await _organizationApiClient.CanCreateBoardAsync(workspaceId: board.WorkspaceId,
+        if (!await _organizationApiClient.CanChangeWorkspaceAsync(workspaceId: board.WorkspaceId,
                 userId: userId))
         {
             throw new AppException("Can't see board", HttpStatusCode.Forbidden);
@@ -54,9 +54,9 @@ public class BoardService : IBoardService
         return _mapper.Map<BoardResponse>(board);
     }
 
-    public async Task<List<BoardResponse>> GetBoardByWorkspaceAsync(Guid userId, Guid workspaceId)
+    public async Task<List<BoardResponse>> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId)
     {
-        if (!await _organizationApiClient.CanCreateBoardAsync(workspaceId: workspaceId,
+        if (!await _organizationApiClient.CanChangeWorkspaceAsync(workspaceId: workspaceId,
                 userId: userId))
         {
             throw new AppException("Can't see boards", HttpStatusCode.Forbidden);
@@ -65,5 +65,18 @@ public class BoardService : IBoardService
         var boards = await _repository.GetBoardsByWorkspaceAsync(workspaceId);
         
         return boards.Select(board => _mapper.Map<BoardResponse>(board)).ToList();
+    }
+
+    public async Task<bool> IsExistBoardWithColumnAsync(Guid boardId, Guid columnId)
+    {
+        var board = await _repository.GetBoardByIdAsync(boardId);
+        if (board == null)
+        {
+            return false;
+        }
+        
+        var column = board.Columns.FirstOrDefault(column => column.Id == columnId);
+        
+        return column != null;
     }
 }

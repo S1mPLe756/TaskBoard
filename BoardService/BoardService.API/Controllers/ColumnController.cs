@@ -24,4 +24,12 @@ public class ColumnController : ControllerBase
 
         return Ok(await _columnService.CreateColumnForBoardAsync(request, boardId, userId));
     }
+
+    [HttpGet("{boardId:guid}")]
+    public async Task<IActionResult> GetColumnsBoard([FromRoute] Guid boardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        return Ok(await _columnService.GetColumnsBoard(boardId, userId));
+
+    }
 }

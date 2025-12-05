@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardService.API", "CardService.API\CardService.API.csproj", "{B754B72E-DA73-4B98-AFA4-26E8A1CE4FF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardService.Domain", "CardService.Domain\CardService.Domain.csproj", "{DEC3FADC-D180-4A89-9791-90D7D076BC66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardService.Infrastructure", "CardService.Infrastructure\CardService.Infrastructure.csproj", "{94CB08B8-BE2D-425F-A115-D6884032FA18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardService.Application", "CardService.Application\CardService.Application.csproj", "{EA142E26-45DB-41A1-BB68-0495B405F381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Middleware", "..\Shared.Middleware\Shared.Middleware\Shared.Middleware.csproj", "{79397F5D-A2FF-447B-B322-866F348EBA33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B754B72E-DA73-4B98-AFA4-26E8A1CE4FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B754B72E-DA73-4B98-AFA4-26E8A1CE4FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B754B72E-DA73-4B98-AFA4-26E8A1CE4FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B754B72E-DA73-4B98-AFA4-26E8A1CE4FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC3FADC-D180-4A89-9791-90D7D076BC66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC3FADC-D180-4A89-9791-90D7D076BC66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC3FADC-D180-4A89-9791-90D7D076BC66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC3FADC-D180-4A89-9791-90D7D076BC66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94CB08B8-BE2D-425F-A115-D6884032FA18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94CB08B8-BE2D-425F-A115-D6884032FA18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94CB08B8-BE2D-425F-A115-D6884032FA18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94CB08B8-BE2D-425F-A115-D6884032FA18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA142E26-45DB-41A1-BB68-0495B405F381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA142E26-45DB-41A1-BB68-0495B405F381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA142E26-45DB-41A1-BB68-0495B405F381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA142E26-45DB-41A1-BB68-0495B405F381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79397F5D-A2FF-447B-B322-866F348EBA33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79397F5D-A2FF-447B-B322-866F348EBA33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79397F5D-A2FF-447B-B322-866F348EBA33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79397F5D-A2FF-447B-B322-866F348EBA33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

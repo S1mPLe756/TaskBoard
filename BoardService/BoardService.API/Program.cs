@@ -5,7 +5,9 @@ using BoardService.Application.Services;
 using BoardService.Domain.Interfaces;
 using BoardService.Infrastructure;
 using BoardService.Infrastructure.DbContext;
+using BoardService.Infrastructure.Messaging.Consumers;
 using BoardService.Infrastructure.Repositories;
+using BoardService.Infrastructure.Settings;
 using Confluent.Kafka;
 using DotNetEnv;
 using ExceptionService;
@@ -102,14 +104,19 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 builder.Services.AddScoped<IBoardService, BoardService.Application.Services.BoardService>();
 builder.Services.AddScoped<IColumnService, ColumnService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 builder.Services.AddAutoMapper(typeof(BoardMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ColumnMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);
 
-// builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
+
+builder.Services.AddHostedService<CardCreatedConsumer>();
 
 
 var app = builder.Build();

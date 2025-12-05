@@ -41,7 +41,16 @@ public class WorkspaceService : IWorkspaceService
         
         return ws.OwnerId == userId || ws.Members.Any(x => x.Id == userId && x.Role == WorkspaceRole.Admin);
     }
-    
+
+    public async Task<bool> CanSeeWorkspace(Guid userId, Guid workspaceId)
+    {
+        var ws = await _repository.GetByIdAsync(workspaceId);
+        
+        if (ws == null) return false;
+        
+        return ws.OwnerId == userId || ws.Members.Any(x => x.Id == userId);
+    }
+
     public async Task<WorkspaceResponse> GetWorkspaceAsync(Guid workspaceId)
     {
         var workspace = await _repository.GetByIdAsync(workspaceId);

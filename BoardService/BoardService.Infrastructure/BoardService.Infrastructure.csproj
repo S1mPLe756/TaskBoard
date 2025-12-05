@@ -20,13 +20,24 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BoardService.Application\BoardService.Application.csproj" />
       <ProjectReference Include="..\BoardService.Domain\BoardService.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Confluent.Kafka">
+        <HintPath>..\..\..\.nuget\packages\confluent.kafka\2.3.0\lib\net6.0\Confluent.Kafka.dll</HintPath>
+      </Reference>
       <Reference Include="ExceptionService">
         <HintPath>..\..\..\.nuget\packages\exceptionservice\1.0.5\lib\net9.0\ExceptionService.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+        <HintPath>..\..\..\.nuget\packages\microsoft.extensions.hosting.abstractions\10.0.0\lib\net9.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Messaging\" />
     </ItemGroup>
 
 </Project>

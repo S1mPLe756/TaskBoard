@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  card_db:
+    image: postgres:16.3-alpine
+    container_name: card_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+    ports:
+      - "5437:5432"
+    volumes:
+      - "card_db:/var/lib/postgresql/data"
+    networks:
+      - card_service
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+volumes:
+  card_db:
+    name: card_db
+
+
+networks:
+  card_service:
+    external: false

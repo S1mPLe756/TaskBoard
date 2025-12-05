@@ -3,5 +3,8 @@ namespace BoardService.Domain.Interfaces;
 
 public interface IOrganizationApiClient
 {
-    Task<bool> CanCreateBoardAsync(Guid workspaceId, Guid userId);
+    Task<bool> CanChangeWorkspaceAsync(Guid workspaceId, Guid userId);
+    
+    Task<bool> CanSeeWorkspaceAsync(Guid workspaceId, Guid userId);
+
 }

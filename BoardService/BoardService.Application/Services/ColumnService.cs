@@ -32,7 +32,7 @@ public class ColumnService : IColumnService
             throw new AppException("Board not found", HttpStatusCode.NotFound);
         }
 
-        if (! await _organizationApiClient.CanCreateBoardAsync(board.WorkspaceId, userId))
+        if (! await _organizationApiClient.CanChangeWorkspaceAsync(board.WorkspaceId, userId))
         {
             throw new AppException("You can't create column", HttpStatusCode.Forbidden);
         }
@@ -44,5 +44,24 @@ public class ColumnService : IColumnService
         await _columnRepository.AddColumnAsync(column);
         
         return _mapper.Map<BoardColumnResponse>(column);
+    }
+
+    public async Task<List<BoardColumnResponse>> GetColumnsBoard(Guid boardId, Guid userId)
+    {
+        var board = await _boardRepository.GetBoardByIdAsync(boardId);
+
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+
+        if (! await _organizationApiClient.CanSeeWorkspaceAsync(board.WorkspaceId, userId))
+        {
+            throw new AppException("You can't see columns", HttpStatusCode.Forbidden);
+        }
+        
+        var columns = await _columnRepository.GetColumnByBoardIdAsync(boardId);
+        
+        return columns.Select(c => _mapper.Map<BoardColumnResponse>(c)).ToList();
     }
 }

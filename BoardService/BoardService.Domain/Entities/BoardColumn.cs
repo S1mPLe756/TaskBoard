@@ -9,6 +9,6 @@ public class BoardColumn
     public Guid BoardId { get; set; }
     public Board Board { get; set; }
 
-    public List<Card> Cards { get; set; } = new();
+    public List<CardPosition> Cards { get; set; } = new();
 
 }

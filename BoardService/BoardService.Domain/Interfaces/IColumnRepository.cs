@@ -7,4 +7,5 @@ public interface IColumnRepository
     Task<BoardColumn?> GetColumnByIdAsync(Guid id); 
     Task AddColumnAsync(BoardColumn board);
     Task UpdateColumnAsync(BoardColumn board);
+    Task<List<BoardColumn>> GetColumnByBoardIdAsync(Guid boardId);
 }

@@ -1,6 +1,7 @@
 using BoardService.Domain.Entities;
 using BoardService.Domain.Interfaces;
 using BoardService.Infrastructure.DbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace BoardService.Infrastructure.Repositories;
 
@@ -26,4 +27,7 @@ public class ColumnRepository : IColumnRepository
         _context.BoardColumns.Update(board);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<BoardColumn>> GetColumnByBoardIdAsync(Guid boardId) =>
+        await _context.BoardColumns.Where(bc => bc.BoardId == boardId).ToListAsync();
 }

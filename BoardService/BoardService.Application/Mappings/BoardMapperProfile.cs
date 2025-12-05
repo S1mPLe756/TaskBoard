@@ -11,7 +11,6 @@ public class BoardMapperProfile : Profile
         CreateMap<CreateBoardRequest, Board>();
         CreateMap<Board, BoardResponse>();
         CreateMap<BoardColumn, BoardColumnResponse>();
-        CreateMap<Card, ColumnCardResponse>();
 
     }
 }

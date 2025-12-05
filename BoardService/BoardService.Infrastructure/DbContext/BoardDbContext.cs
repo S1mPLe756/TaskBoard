@@ -11,7 +11,7 @@ public class BoardDbContext : Microsoft.EntityFrameworkCore.DbContext
     
     public DbSet<BoardColumn> BoardColumns { get; set; } = null!;
     
-    public DbSet<Card> Cards { get; set; }
+    public DbSet<CardPosition> CardPositions { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder model)
     {
@@ -23,14 +23,14 @@ public class BoardDbContext : Microsoft.EntityFrameworkCore.DbContext
             .HasForeignKey(column => column.BoardId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        model.Entity<BoardColumn>()
-            .HasMany(c => c.Cards)
-            .WithOne(card => card.Column)
-            .HasForeignKey(card => card.ColumnId)
+        model.Entity<CardPosition>()
+            .HasOne(cp => cp.Column)
+            .WithMany(c => c.Cards)
+            .HasForeignKey(cp => cp.ColumnId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        model.Entity<Card>()
-            .HasKey(x => x.Id);
+        model.Entity<CardPosition>()
+            .HasKey(cp => cp.Id);
 
     }
 }

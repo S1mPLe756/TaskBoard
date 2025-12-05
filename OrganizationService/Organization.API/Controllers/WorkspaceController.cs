@@ -47,6 +47,13 @@ public class WorkspaceController : ControllerBase
         var workspace = await _workspaceService.CanChangeWorkspaceAsync(userId, workspaceId);
         return Ok(workspace);
     }
+    
+    [HttpGet("{workspaceId:guid}/can-see-workspace/{userId:guid}")]
+    public async Task<IActionResult> CanSeeWorkspace(Guid workspaceId, Guid userId)
+    {
+        var workspace = await _workspaceService.CanSeeWorkspace(userId, workspaceId);
+        return Ok(workspace);
+    }
 
     [HttpPost("{workspaceId:guid}/members")]
     public async Task<IActionResult> AddMember(Guid workspaceId, [FromBody] AddMemberRequest dto)
