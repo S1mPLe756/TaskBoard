@@ -6,5 +6,5 @@ public interface ICardService
 {
     Task<CardResponse> GetCard(Guid cardId);
     Task<CardResponse> CreateCard(CreateCardRequest request, Guid userId);
-
+    Task<List<CardResponse>> GetCardsBatchAsync(GetCardsBatchRequest request);
 }

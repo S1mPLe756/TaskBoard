@@ -1,4 +1,4 @@
-namespace BoardService.Application.DTOs;
+namespace BoardService.Application.DTOs.Requestes;
 
 public class CreatedCardRequest
 {

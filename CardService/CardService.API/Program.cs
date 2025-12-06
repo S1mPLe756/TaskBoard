@@ -107,6 +107,8 @@ builder.Services.AddScoped<ICardService, CardService.Application.Services.CardSe
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 
 builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(CardChecklistMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(LabelMapperProfile).Assembly);
 
 builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 

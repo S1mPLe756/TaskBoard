@@ -1,4 +1,5 @@
 using BoardService.Domain.Interfaces;
+using BoardService.Infrastructure.ExternalAPI;
 using BoardService.Infrastructure.ExternalAPI.Clients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,15 @@ public static class DependencyInjection
             });
 
         services.AddScoped<IOrganizationApiClient, OrganizationApiClient>();
+        
+        services.AddRefitClient<ICardApiRefitClient>()
+            .ConfigureHttpClient(client => 
+            {
+                client.BaseAddress = new Uri(configuration["ExternalServices:CardApi"]);
+            });
+
+        services.AddScoped<ICardApiClient, CardApiClient>();
+
 
         return services;
     }

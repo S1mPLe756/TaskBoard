@@ -1,3 +1,4 @@
+using AuthService.Application.DTOs.Requestes;
 using AuthService.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ public class TokenController : ControllerBase
     }
     
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] string refresh)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refresh)
     {
         return Ok(await _tokenService.RefreshToken(refresh));
     }

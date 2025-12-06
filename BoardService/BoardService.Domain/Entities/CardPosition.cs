@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using BoardService.Domain.DTOs;
+
 namespace BoardService.Domain.Entities;
 
 public class CardPosition
@@ -10,5 +13,8 @@ public class CardPosition
     public int Position { get; set; }
 
     public BoardColumn Column { get; set; } = null!;
+
+    [NotMapped]
+    public CardResponse? Card { get; set; }
 
 }

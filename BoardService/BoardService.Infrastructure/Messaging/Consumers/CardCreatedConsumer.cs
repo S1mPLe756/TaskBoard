@@ -1,5 +1,6 @@
 using System.Text.Json;
 using BoardService.Application.DTOs;
+using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.Interfaces;
 using BoardService.Infrastructure.Messaging.Events;
 using BoardService.Infrastructure.Settings;

@@ -1,4 +1,6 @@
 using BoardService.Application.DTOs;
+using BoardService.Application.DTOs.Requestes;
+using BoardService.Application.DTOs.Responses;
 
 namespace BoardService.Application.Interfaces;
 

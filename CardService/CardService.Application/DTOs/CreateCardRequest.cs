@@ -12,6 +12,10 @@ public class CreateCardRequest
     [StringLength(256, MinimumLength = 0, ErrorMessage = "Описание должно быть от 0 до 256 символов")]
     public string? Description { get; set; }
     
+    public List<CardLabelRequest> Labels { get; set; } = new();
+    public List<CardChecklistRequest> Checklists { get; set; } = new();
+
+    
     [Required(ErrorMessage = "Приоритет обязателен")]
     [JsonConverter(typeof(JsonStringEnumConverter))] 
     public CardPriority Priority { get; set; }

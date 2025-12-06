@@ -23,4 +23,10 @@ public class CardController : ControllerBase
         
         return Ok(await _cardService.CreateCard(request, userId));
     }
+
+    [HttpPost("batch")]
+    public async Task<IActionResult> GetCards([FromBody] GetCardsBatchRequest request)
+    {
+        return Ok(await _cardService.GetCardsBatchAsync(request));
+    }
 }

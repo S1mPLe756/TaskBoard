@@ -1,6 +1,7 @@
 using CardService.Domain.Entities;
 using CardService.Domain.Interfaces;
 using CardService.Infrastructure.DbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace CardService.Infrastructure.Repositories;
 
@@ -25,5 +26,11 @@ public class CardRepository : ICardRepository
     {
         _context.Cards.Update(card);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Card>> GetCardsByIdsAsync(List<Guid> requestCardIds)
+    {
+        return await _context.Cards.Include(c=>c.Labels)
+            .Include(c=>c.Checklists).ThenInclude(c=>c.Items).Where(c => requestCardIds.Contains(c.Id)).ToListAsync();
     }
 }

@@ -1,7 +1,4 @@
-using System.Text.Json.Serialization;
-using CardService.Domain.Enum;
-
-namespace CardService.Application.DTOs;
+namespace BoardService.Domain.DTOs;
 
 public class CardResponse
 {
@@ -12,12 +9,12 @@ public class CardResponse
     
     public List<CardLabelResponse> Labels { get; set; } = new();
     public List<CardChecklistResponse> Checklists { get; set; } = new();
+
     
     public List<Guid> AssigneeIds { get; set; } = new();
     public List<Guid> WatcherIds { get; set; } = new();
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public CardPriority Priority { get; set; } = CardPriority.Normal;
+    public string Priority { get; set; }
     public DateTime? DueDate { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

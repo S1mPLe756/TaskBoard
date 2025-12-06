@@ -1,5 +1,6 @@
 using System.Net;
 using AuthService.Application.DTOs;
+using AuthService.Application.DTOs.Requestes;
 using AuthService.Application.DTOs.Responses;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
@@ -39,9 +40,9 @@ public class TokenService : ITokenService
     }
 
     
-    public async Task<TokenPairDto> RefreshToken(string refreshToken)
+    public async Task<TokenPairDto> RefreshToken(RefreshTokenRequest refreshToken)
     {
-        RefreshToken? refresh = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
+        RefreshToken? refresh = await _refreshTokenRepository.GetByTokenAsync(refreshToken.refreshToken);
 
         if (refresh == null || refresh.IsRevoked || refresh.IsExpired)
         {

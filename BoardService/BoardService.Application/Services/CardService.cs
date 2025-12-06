@@ -1,5 +1,6 @@
 using AutoMapper;
 using BoardService.Application.DTOs;
+using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.Interfaces;
 using BoardService.Domain.Entities;
 using BoardService.Domain.Interfaces;

@@ -51,4 +51,12 @@ public class CardService(
         
         return mapper.Map<CardResponse>(card);
     }
+
+    public async Task<List<CardResponse>> GetCardsBatchAsync(GetCardsBatchRequest request)
+    {
+        if (request.CardIds == null || request.CardIds.Count == 0)
+            throw new AppException("CardIds must not be empty");
+        var cards = await repository.GetCardsByIdsAsync(request.CardIds);
+        return cards.Select(mapper.Map<CardResponse>).ToList();
+    }
 }

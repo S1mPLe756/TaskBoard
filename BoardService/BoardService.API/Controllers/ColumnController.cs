@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BoardService.Application.DTOs;
+using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

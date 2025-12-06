@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BoardService.Application.DTOs;
+using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,14 @@ public class BoardController : ControllerBase
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         return Ok(await _boardService.GetBoardAsync(userId, boardId));
+    }
+    
+    [HttpGet("{boardId:guid}/full")]
+    public async Task<IActionResult> GetBoardFull(Guid boardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _boardService.GetBoardFullAsync(userId, boardId));
     }
 
     [HttpGet("workspace/{workspaceId:guid}")]
