@@ -6,8 +6,9 @@ namespace Organization.Application.Interfaces;
 
 public interface IInvitationService
 {
-    Task<InvitationResponse> CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role);
-    Task AcceptInvitationAsync(Guid invitationId, Guid userId);
+    Task CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role);
+    Task<AcceptInvtitationResponse> AcceptInvitationAsync(Guid invitationId, Guid userId);
     Task<List<InvitationResponse>> GetPendingInvitationsAsync(string email);
 
+    Task<WorkspaceResponse> GetWorkspaceByInvitationAsync(Guid invitationId);
 }

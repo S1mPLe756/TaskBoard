@@ -41,7 +41,7 @@ public class BoardService(
             throw new AppException("Board not found", HttpStatusCode.NotFound);
         }
             
-        if (!await organizationApiClient.CanChangeWorkspaceAsync(workspaceId: board.WorkspaceId,
+        if (!await organizationApiClient.CanSeeWorkspaceAsync(workspaceId: board.WorkspaceId,
                 userId: userId))
         {
             throw new AppException("Can't see board", HttpStatusCode.Forbidden);
@@ -52,7 +52,7 @@ public class BoardService(
 
     public async Task<List<BoardResponse>> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId)
     {
-        if (!await organizationApiClient.CanChangeWorkspaceAsync(workspaceId: workspaceId,
+        if (!await organizationApiClient.CanSeeWorkspaceAsync(workspaceId: workspaceId,
                 userId: userId))
         {
             throw new AppException("Can't see boards", HttpStatusCode.Forbidden);

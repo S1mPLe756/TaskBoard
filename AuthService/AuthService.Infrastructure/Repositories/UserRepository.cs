@@ -25,4 +25,6 @@ public class UserRepository : IUserRepository
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<User>> GetUsersByIdsAsync(List<Guid> ids) => await _dbContext.Users.Where(u => ids.Contains(u.Id)).ToListAsync();
 }

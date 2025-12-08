@@ -8,4 +8,5 @@ public interface IWorkspaceRepository
     Task<List<Workspace>> GetByUserIdAsync(Guid userId);
     Task AddAsync(Workspace workspace);
     Task UpdateAsync(Workspace workspace);
+    Task DeleteAsync(Workspace workspace);
 }

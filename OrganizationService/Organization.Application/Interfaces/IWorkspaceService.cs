@@ -15,4 +15,7 @@ public interface IWorkspaceService
     Task<bool> CanChangeWorkspaceAsync(Guid userId, Guid workspaceId);
 
     Task<bool> CanSeeWorkspace(Guid userId, Guid workspaceId);
+    Task<MemberResponse> GetMembersAsync(Guid workspaceId, Guid userId);
+    Task DeleteWorkspaceAsync(Guid workspaceId, Guid userId);
+    Task ChangeWorkspaceAsync(ChangeWorkspaceRequest request, Guid workspaceId, Guid userId);
 }

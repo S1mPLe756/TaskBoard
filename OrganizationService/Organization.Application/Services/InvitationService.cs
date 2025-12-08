@@ -11,27 +11,30 @@ using Organization.Domain.Interfaces;
 
 namespace Organization.Application.Services;
 
-public class InvitationService : IInvitationService
+public class InvitationService(
+    IInvitationRepository repository,
+    IWorkspaceRepository workspaceRepository,
+    IMapper mapper,
+    IEventPublisher eventPublisher, IUserApiClient userApiClient)
+    : IInvitationService
 {
-    private IInvitationRepository _repository;
-    private IWorkspaceRepository _workspaceRepository;
-    private IMapper _mapper;
-    private IEventPublisher _eventPublisher;
-
-    public InvitationService(IInvitationRepository repository, IWorkspaceRepository workspaceRepository, IMapper mapper, IEventPublisher eventPublisher)
+    public async Task CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role)
     {
-        _repository = repository;
-        _workspaceRepository = workspaceRepository;
-        _mapper = mapper;
-        _eventPublisher = eventPublisher;
-    }
-
-    
-    public async Task<InvitationResponse> CreateInvitationAsync(Guid workspaceId, string email, WorkspaceRole role)
-    {
-        var ws = await _workspaceRepository.GetByIdAsync(workspaceId);
+        var ws = await workspaceRepository.GetByIdAsync(workspaceId);
         if (ws == null) throw new AppException("Workspace not found", HttpStatusCode.NotFound);
+        
+        var user = await userApiClient.GetUserByEmail(email);
 
+        if (user == null)
+        {
+            return;
+        }
+
+        if (ws.OwnerId == user.Id)
+        {
+            throw new AppException("You cannot accept the same user", HttpStatusCode.Forbidden);
+        }
+        
         var inv = new Invitation
         {
             WorkspaceId = workspaceId,
@@ -39,32 +42,67 @@ public class InvitationService : IInvitationService
             Role = role,
             ExpiresAt = DateTime.UtcNow.AddDays(7)
         };
-        await _repository.AddAsync(inv);
-        await _eventPublisher.PublishInvitationSendAsync(new InvitationSendEvent()
+        await repository.AddAsync(inv);
+        await eventPublisher.PublishInvitationSendAsync(new InvitationSendEvent()
         {
             Email = email,
             InvitationId = inv.Id,
             OrganizationName = ws.Name
         });
-        return _mapper.Map<InvitationResponse>(inv);
     }
 
-    public async Task AcceptInvitationAsync(Guid invitationId, Guid userId)
+    public async Task<AcceptInvtitationResponse> AcceptInvitationAsync(Guid invitationId, Guid userId)
     {
-        var inv = await _repository.GetByIdAsync(invitationId);
-        if (inv == null || inv.ExpiresAt < DateTime.UtcNow) throw new AppException("Invalid invitation");
+        var inv = await repository.GetByIdAsync(invitationId);
 
+        if (inv == null || inv.ExpiresAt < DateTime.UtcNow || inv.Accepted) throw new AppException("Invalid invitation");
+
+        var user = await userApiClient.GetUserByEmail(inv.Email);
+
+        if (user == null || user.Id != userId)
+        {
+            throw new AppException("Invalid user", HttpStatusCode.Forbidden);
+        }
+            
+        var ws = await workspaceRepository.GetByIdAsync(inv.WorkspaceId);
+
+        if (ws == null)
+        {
+            throw new AppException("Workspace not found", HttpStatusCode.NotFound);
+        }
+        
         inv.Accepted = true;
-        await _repository.UpdateAsync(inv);
+        await repository.UpdateAsync(inv);
 
-        var ws = await _workspaceRepository.GetByIdAsync(inv.WorkspaceId);
         ws.Members.Add(new WorkspaceMember { UserId = userId, Role = inv.Role });
-        await _workspaceRepository.UpdateAsync(ws);
+        await workspaceRepository.UpdateAsync(ws);
+
+        return new()
+        {
+            InvitationId = inv.Id,
+            WorkspaceId = ws.Id,
+        };
     }
 
     public async Task<List<InvitationResponse>> GetPendingInvitationsAsync(string email)
     {
-        var list = await _repository.GetPendingByEmailAsync(email);
-        return list.Select(inv => _mapper.Map<InvitationResponse>(inv)).ToList();
+        var list = await repository.GetPendingByEmailAsync(email);
+        return list.Select(inv => mapper.Map<InvitationResponse>(inv)).ToList();
+    }
+
+    public async Task<WorkspaceResponse> GetWorkspaceByInvitationAsync(Guid invitationId)
+    {
+        var inv = await repository.GetByIdAsync(invitationId);
+
+        if (inv == null || inv.ExpiresAt < DateTime.UtcNow || inv.Accepted) throw new AppException("Invalid invitation");
+
+        var ws = await workspaceRepository.GetByIdAsync(inv.WorkspaceId);
+
+        if (ws == null)
+        {
+            throw new AppException("Workspace not found", HttpStatusCode.NotFound);
+        }
+
+        return mapper.Map<WorkspaceResponse>(ws);
     }
 }

@@ -13,6 +13,7 @@ using Organization.Application.Interfaces;
 using Organization.Application.Mappings;
 using Organization.Application.Services;
 using Organization.Domain.Interfaces;
+using Organization.Infrastructure;
 using Organization.Infrastructure.DbContext;
 using Organization.Infrastructure.Messaging;
 using Organization.Infrastructure.Repositories;
@@ -110,6 +111,8 @@ builder.Services.AddScoped<IInvitationService, InvitationService>();
 
 builder.Services.AddAutoMapper(typeof(WorkspaceMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(InvitationMapperProfile).Assembly);
+
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 

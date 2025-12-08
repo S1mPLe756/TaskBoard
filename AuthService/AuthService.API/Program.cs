@@ -59,10 +59,12 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService.Application.Services.AuthService>();
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 
 builder.Services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 
 

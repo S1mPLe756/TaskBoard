@@ -29,4 +29,10 @@ public class WorkspaceRepository : IWorkspaceRepository
         _dbContext.Workspaces.Update(workspace);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task DeleteAsync(Workspace workspace)
+    {
+        _dbContext.Workspaces.Remove(workspace);
+        await _dbContext.SaveChangesAsync();
+    }
 }

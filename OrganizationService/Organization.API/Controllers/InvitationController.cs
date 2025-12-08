@@ -20,15 +20,21 @@ public class InvitationController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Invite([FromBody] CreateInvitationRequest dto)
     {
-        var invitation = await _invitationService.CreateInvitationAsync(dto.WorkspaceId, dto.Email, dto.Role);
-        return Ok(invitation);
+        await _invitationService.CreateInvitationAsync(dto.WorkspaceId, dto.Email, dto.Role);
+        return Ok();
     }
 
     [HttpPost("{invitationId:guid}/accept")]
     public async Task<IActionResult> Accept(Guid invitationId)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        await _invitationService.AcceptInvitationAsync(invitationId, userId);
-        return NoContent();
+        
+        return Ok(await _invitationService.AcceptInvitationAsync(invitationId, userId));
+    }
+    
+    [HttpGet("{invitationId:guid}/workspace")]
+    public async Task<IActionResult> GetByInvitation(Guid invitationId)
+    {
+        return Ok(await _invitationService.GetWorkspaceByInvitationAsync(invitationId));
     }
 }

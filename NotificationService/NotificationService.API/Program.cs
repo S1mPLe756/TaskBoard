@@ -42,12 +42,12 @@ builder.Services.AddHealthChecks()
         failureStatus: HealthStatus.Unhealthy,
         tags: ["message-broker"]
     )
-    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Auth DB")   
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Notification DB")   
     .AddCheck<SmtpHealthCheck>(
         "SMTP",
         failureStatus: HealthStatus.Unhealthy,
         tags: new[] { "email" }
-    );;
+    );
 
 
 

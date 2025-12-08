@@ -28,7 +28,7 @@ Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddHealthChecks()
-    /*.AddKafka(
+    .AddKafka(
         config: new ProducerConfig()
         {
             BootstrapServers = builder.Configuration["Kafka:BootstrapServers"],
@@ -38,7 +38,7 @@ builder.Services.AddHealthChecks()
         timeout: TimeSpan.FromSeconds(5),
         failureStatus: HealthStatus.Unhealthy,
         tags: ["message-broker"]
-    )*/
+    )
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Boards DB");
 
 builder.Services.AddOpenApi();

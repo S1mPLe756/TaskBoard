@@ -35,15 +35,41 @@ public class WorkspaceController : ControllerBase
     }
 
     [HttpGet("{workspaceId:guid}")]
-    public async Task<IActionResult> Get(Guid workspaceId)
+    public async Task<IActionResult> GetWorkspace(Guid workspaceId)
     {
         var workspace = await _workspaceService.GetWorkspaceAsync(workspaceId);
         return Ok(workspace);
     }
     
+    [HttpDelete("{workspaceId:guid}")]
+    public async Task<IActionResult> DeleteWorkspace(Guid workspaceId)
+    { 
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
+        await _workspaceService.DeleteWorkspaceAsync(workspaceId, userId);
+        return NoContent();
+    }
+    
+    [HttpPut("{workspaceId:guid}")]
+    public async Task<IActionResult> ChangeWorkspace(Guid workspaceId, ChangeWorkspaceRequest request)
+    { 
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
+        await _workspaceService.ChangeWorkspaceAsync(request, workspaceId, userId);
+        return NoContent();
+    }
+    
     [HttpGet("{workspaceId:guid}/can-change-workspace/{userId:guid}")]
     public async Task<IActionResult> CanChangeWorkspace(Guid workspaceId, Guid userId)
     {
+        var workspace = await _workspaceService.CanChangeWorkspaceAsync(userId, workspaceId);
+        return Ok(workspace);
+    }
+    
+    [HttpGet("{workspaceId:guid}/can-change-workspace")]
+    public async Task<IActionResult> CanChangeWorkspace(Guid workspaceId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         var workspace = await _workspaceService.CanChangeWorkspaceAsync(userId, workspaceId);
         return Ok(workspace);
     }
@@ -59,6 +85,15 @@ public class WorkspaceController : ControllerBase
     public async Task<IActionResult> AddMember(Guid workspaceId, [FromBody] AddMemberRequest dto)
     {
         var member = await _workspaceService.AddMemberAsync(workspaceId, dto.UserId, dto.Role);
+        return Ok(member);
+    }
+    
+    [HttpGet("{workspaceId:guid}/members")]
+    public async Task<IActionResult> GetMembers(Guid workspaceId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        var member = await _workspaceService.GetMembersAsync(workspaceId, userId);
         return Ok(member);
     }
 }

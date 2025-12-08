@@ -19,6 +19,7 @@ public class WorkspaceMapperProfile : Profile
             .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Members));
 
         CreateMap<WorkspaceMember, WorkspaceMemberResponse>();
+        CreateMap<WorkspaceMember, MemberUserResponse>();
 
     }
 }

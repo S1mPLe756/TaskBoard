@@ -157,7 +157,7 @@
         { "Host": "localhost", "Port": 5104 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -171,7 +171,7 @@
         { "Host": "localhost", "Port": 5104 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/members",
-      "UpstreamHttpMethod": [ "POST", "DELETE" ],
+      "UpstreamHttpMethod": [ "POST", "DELETE", "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -185,6 +185,20 @@
         { "Host": "localhost", "Port": 5104 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Workspace/{workspaceId}/can-change-workspace",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Organization",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5104 }
+      ],
+      "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace",
       "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -214,6 +228,20 @@
       ],
       "UpstreamPathTemplate": "/invitation",
       "UpstreamHttpMethod": [ "POST", "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Invitation/{invitationId}/workspace",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Organization",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5104 }
+      ],
+      "UpstreamPathTemplate": "/invitation/{invitationId}/workspace",
+      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
