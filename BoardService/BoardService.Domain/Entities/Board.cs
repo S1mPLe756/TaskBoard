@@ -1,3 +1,5 @@
+using BoardService.Domain.Enums;
+
 namespace BoardService.Domain.Entities;
 
 public class Board
@@ -6,6 +8,8 @@ public class Board
     public string Title { get; set; }
     public Guid WorkspaceId { get; set; }
     public bool IsArchived { get; set; }
+    
+    public DeletionStatus Status { get; set; } = DeletionStatus.NotDeleted;
 
     public List<BoardColumn> Columns { get; set; } = new();
     

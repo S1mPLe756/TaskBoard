@@ -31,4 +31,10 @@ public class BoardRepository : IBoardRepository
 
     public async Task<List<Board>> GetBoardsByWorkspaceAsync(Guid workspaceId) =>
         await _dbContext.Boards.Include(b => b.Columns).Where(x => x.WorkspaceId == workspaceId).ToListAsync();
+
+    public async Task DeleteBoardAsync(Board board)
+    {
+        _dbContext.Boards.Remove(board);
+        await _dbContext.SaveChangesAsync();
+    }
 }

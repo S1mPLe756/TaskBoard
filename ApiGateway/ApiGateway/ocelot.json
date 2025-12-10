@@ -157,7 +157,7 @@
         { "Host": "localhost", "Port": 5104 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}",
-      "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ],
+      "UpstreamHttpMethod": [ "GET", "DELETE", "PATCH" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -290,6 +290,20 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Column/board/{boardId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Board",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5106 }
+      ],
+      "UpstreamPathTemplate": "/column/board/{boardId}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Column/{boardId}",
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
@@ -297,7 +311,7 @@
         { "Host": "localhost", "Port": 5106 }
       ],
       "UpstreamPathTemplate": "/column/{boardId}",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "DELETE","PATCH" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -311,7 +325,7 @@
         { "Host": "localhost", "Port": 5106 }
       ],
       "UpstreamPathTemplate": "/board/{boardId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "DELETE", "PATCH" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []

@@ -1,3 +1,5 @@
+using BoardService.Domain.Enums;
+
 namespace BoardService.Domain.Entities;
 
 public class BoardColumn
@@ -10,5 +12,5 @@ public class BoardColumn
     public Board Board { get; set; }
 
     public List<CardPosition> Cards { get; set; } = new();
-
+    public DeletionStatus Status { get; set; } = DeletionStatus.NotDeleted;
 }

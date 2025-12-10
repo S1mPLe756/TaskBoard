@@ -1,4 +1,4 @@
-namespace CardService.Application.DTOs;
+namespace CardService.Application.DTOs.Requests;
 
 public class GetCardsBatchRequest
 {

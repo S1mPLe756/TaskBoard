@@ -13,8 +13,9 @@ public class ColumnRepository : IColumnRepository
     {
         _context = context;
     }
-    
-    public async Task<BoardColumn?> GetColumnByIdAsync(Guid id) => await _context.BoardColumns.FindAsync(id);
+
+    public async Task<BoardColumn?> GetColumnByIdAsync(Guid id) => await _context.BoardColumns.Include(c => c.Cards)
+        .Include(c => c.Board).Where(c => c.Id == id).FirstOrDefaultAsync();
 
     public async Task AddColumnAsync(BoardColumn board)
     {
@@ -30,4 +31,10 @@ public class ColumnRepository : IColumnRepository
 
     public async Task<List<BoardColumn>> GetColumnByBoardIdAsync(Guid boardId) =>
         await _context.BoardColumns.Where(bc => bc.BoardId == boardId).ToListAsync();
+
+    public async Task DeleteColumnAsync(BoardColumn board)
+    {
+        _context.BoardColumns.Remove(board);
+        await _context.SaveChangesAsync();
+    }
 }

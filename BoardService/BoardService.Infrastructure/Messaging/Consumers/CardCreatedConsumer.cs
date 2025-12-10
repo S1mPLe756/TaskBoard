@@ -2,7 +2,7 @@ using System.Text.Json;
 using BoardService.Application.DTOs;
 using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.Interfaces;
-using BoardService.Infrastructure.Messaging.Events;
+using BoardService.Domain.Events;
 using BoardService.Infrastructure.Settings;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
@@ -37,10 +37,7 @@ public class CardCreatedConsumer : BackgroundService
 
         _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
         
-        _topic = _kafkaSettings.Topic;
-
-        
-
+        _topic = _kafkaSettings.CardCreatedTopic;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

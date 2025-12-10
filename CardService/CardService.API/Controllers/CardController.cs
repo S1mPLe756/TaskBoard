@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using CardService.Application.DTOs;
+using CardService.Application.DTOs.Requests;
 using CardService.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

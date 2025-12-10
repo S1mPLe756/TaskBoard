@@ -1,4 +1,4 @@
-namespace BoardService.Infrastructure.Messaging.Events;
+namespace BoardService.Domain.Events;
 
 public class CardCreatedEvent
 {

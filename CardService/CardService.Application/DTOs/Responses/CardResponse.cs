@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using CardService.Domain.Enum;
 
-namespace CardService.Application.DTOs;
+namespace CardService.Application.DTOs.Responses;
 
 public class CardResponse
 {

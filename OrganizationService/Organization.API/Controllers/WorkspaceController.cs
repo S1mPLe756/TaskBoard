@@ -50,7 +50,7 @@ public class WorkspaceController : ControllerBase
         return NoContent();
     }
     
-    [HttpPut("{workspaceId:guid}")]
+    [HttpPatch("{workspaceId:guid}")]
     public async Task<IActionResult> ChangeWorkspace(Guid workspaceId, ChangeWorkspaceRequest request)
     { 
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

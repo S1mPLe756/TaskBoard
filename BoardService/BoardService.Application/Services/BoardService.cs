@@ -5,8 +5,10 @@ using BoardService.Application.DTOs.Requestes;
 using BoardService.Application.DTOs.Responses;
 using BoardService.Application.Interfaces;
 using BoardService.Domain.Entities;
+using BoardService.Domain.Enums;
 using BoardService.Domain.Interfaces;
 using ExceptionService;
+using Hangfire;
 
 namespace BoardService.Application.Services;
 
@@ -14,7 +16,7 @@ public class BoardService(
     IBoardRepository repository,
     IMapper mapper,
     IOrganizationApiClient organizationApiClient,
-    ICardApiClient cardApiClient)
+    ICardApiClient cardApiClient, IEventPublisher eventPublisher)
     : IBoardService
 {
 
@@ -50,17 +52,23 @@ public class BoardService(
         return mapper.Map<BoardResponse>(board);
     }
 
-    public async Task<List<BoardResponse>> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId)
+    public async Task<BoardsResponse> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId)
     {
         if (!await organizationApiClient.CanSeeWorkspaceAsync(workspaceId: workspaceId,
                 userId: userId))
         {
             throw new AppException("Can't see boards", HttpStatusCode.Forbidden);
         }
+
+        var isCanChange = await organizationApiClient.CanChangeWorkspaceAsync(workspaceId, userId);
         
         var boards = await repository.GetBoardsByWorkspaceAsync(workspaceId);
         
-        return boards.Select(board => mapper.Map<BoardResponse>(board)).ToList();
+        return new BoardsResponse()
+        {
+            CanChangeWorkspace = isCanChange,
+            Boards = boards.Where(b=>b.Status == DeletionStatus.NotDeleted).Select(board => mapper.Map<BoardResponse>(board)).ToList()
+        };
     }
 
     public async Task<bool> IsExistBoardWithColumnAsync(Guid boardId, Guid columnId)
@@ -91,6 +99,7 @@ public class BoardService(
         }
 
         var cardIds = board.Columns.SelectMany(column => column.Cards).Select(x=>x.CardId).ToList();
+        board.Columns = board.Columns.OrderBy(c => c.Position).ToList();
 
         if (cardIds.Count != 0)
         {
@@ -99,8 +108,12 @@ public class BoardService(
                 CardIds = cardIds
             });
             
+            
+            
             foreach (var column in board.Columns)
             {
+                column.Cards = column.Cards.OrderBy(c => c.Position).ToList();
+                
                 foreach (var cardRef in column.Cards)
                 {
                     cardRef.Card = cardsResponse.FirstOrDefault(c => c.Id == cardRef.CardId);
@@ -109,5 +122,113 @@ public class BoardService(
         }
         
         return mapper.Map<BoardFullResponse>(board);
+    }
+
+    public async Task DeleteBoardAsync(Guid userId, Guid boardId)
+    {
+        var board = await repository.GetBoardByIdAsync(boardId);
+
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+            
+        if (!await organizationApiClient.CanChangeWorkspaceAsync(workspaceId: board.WorkspaceId,
+                userId: userId))
+        {
+            throw new AppException("Can't see board", HttpStatusCode.Forbidden);
+        }
+
+        board.Status = DeletionStatus.Deleting;
+        
+        await repository.UpdateBoardAsync(board);
+        
+        var cardIds = board.Columns.SelectMany(column => column.Cards).Select(x=>x.CardId).ToList();
+
+        try
+        {
+            await eventPublisher.PublishBoardDeleteSendAsync(new()
+            {
+                BoardId = boardId,
+                CardIds = cardIds,
+            });
+        }
+        catch (Exception ex)
+        {
+            board.Status = DeletionStatus.NotDeleted;
+            await repository.UpdateBoardAsync(board);
+            throw new AppException(("Failed to publish board deletion event: " + ex.Message), HttpStatusCode.InternalServerError);
+        }
+
+    }
+    
+
+    public async Task CompleteBoardDeletionAsync(Guid evtBoardId)
+    {
+        var board = await repository.GetBoardByIdAsync(evtBoardId);
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+        
+        await repository.DeleteBoardAsync(board);
+    }
+
+    public async Task FailedBoardDeleteAsync(Guid boardId)
+    {
+        var board = await repository.GetBoardByIdAsync(boardId);
+
+        if (board == null)
+        {
+            return;
+        }
+
+        board.Status = DeletionStatus.DeletionFailed;
+
+        await repository.UpdateBoardAsync(board);
+        
+        BackgroundJob.Schedule(
+            () => RetryDeleteBoard(boardId),
+            TimeSpan.FromMinutes(5)
+        );
+
+    }
+
+    public async Task UpdateBoardAsync(Guid userId, Guid boardId, UpdateBoardRequest request)
+    {
+        var board = await repository.GetBoardByIdAsync(boardId);
+        
+        
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+            
+        if (!await organizationApiClient.CanChangeWorkspaceAsync(workspaceId: board.WorkspaceId,
+                userId: userId))
+        {
+            throw new AppException("Can't change board", HttpStatusCode.Forbidden);
+        }
+        
+        board.Title = request.Title;
+        
+        await repository.UpdateBoardAsync(board);
+    }
+
+    private async Task RetryDeleteBoard(Guid boardId)
+    {
+        var board = await repository.GetBoardByIdAsync(boardId);
+        if (board == null || board.Status != DeletionStatus.DeletionFailed) return;
+
+        board.Status = DeletionStatus.Deleting;
+        await repository.UpdateBoardAsync(board);
+
+        var cardIds = board.Columns.SelectMany(c => c.Cards).Select(c => c.CardId).ToList();
+
+        await eventPublisher.PublishBoardDeleteSendAsync(new()
+        {
+            BoardId = boardId,
+            CardIds = cardIds,
+        });
     }
 }

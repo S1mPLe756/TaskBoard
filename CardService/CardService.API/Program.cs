@@ -5,7 +5,10 @@ using CardService.Domain.Interfaces;
 using CardService.Infrastructure;
 using CardService.Infrastructure.DbContext;
 using CardService.Infrastructure.Messaging;
+using CardService.Infrastructure.Messaging.Consumers;
+using CardService.Infrastructure.Messaging.Producers;
 using CardService.Infrastructure.Repositories;
+using CardService.Infrastructure.Settings;
 using Confluent.Kafka;
 using DotNetEnv;
 using ExceptionService;
@@ -13,6 +16,7 @@ using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -102,6 +106,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<ICardLabelRepository, CardLabelRepository>();
 
 builder.Services.AddScoped<ICardService, CardService.Application.Services.CardService>();
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
@@ -111,6 +116,13 @@ builder.Services.AddAutoMapper(typeof(CardChecklistMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(LabelMapperProfile).Assembly);
 
 builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<KafkaSettings>>().Value);
+
+builder.Services.AddHostedService<BoardDeleteConsumer>();
+builder.Services.AddHostedService<ColumnDeleteConsumer>();
+
 
 
 var app = builder.Build();

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CardService.Application.DTOs;
+namespace CardService.Application.DTOs.Requests;
 
 public class CardChecklistItemRequest
 {

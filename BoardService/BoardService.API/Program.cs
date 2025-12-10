@@ -6,6 +6,7 @@ using BoardService.Domain.Interfaces;
 using BoardService.Infrastructure;
 using BoardService.Infrastructure.DbContext;
 using BoardService.Infrastructure.Messaging.Consumers;
+using BoardService.Infrastructure.Messaging.Producers;
 using BoardService.Infrastructure.Repositories;
 using BoardService.Infrastructure.Settings;
 using Confluent.Kafka;
@@ -15,6 +16,7 @@ using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -106,7 +108,6 @@ builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 
-builder.Services.AddScoped<IBoardService, BoardService.Application.Services.BoardService>();
 builder.Services.AddScoped<IColumnService, ColumnService>();
 builder.Services.AddScoped<ICardService, CardService>();
 
@@ -115,8 +116,17 @@ builder.Services.AddAutoMapper(typeof(ColumnMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);
 
 builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<KafkaSettings>>().Value);
+
+builder.Services.AddSingleton<IEventPublisher, BoardProducerService>();
+builder.Services.AddScoped<IBoardService, BoardService.Application.Services.BoardService>();
 
 builder.Services.AddHostedService<CardCreatedConsumer>();
+builder.Services.AddHostedService<BoardCardsDeletedConsumer>();
+builder.Services.AddHostedService<BoardCardsDeleteFailedConsumer>();
+builder.Services.AddHostedService<ColumnCardsDeletedConsumer>();
+builder.Services.AddHostedService<ColumnCardsDeleteFailedConsumer>();
 
 
 var app = builder.Build();

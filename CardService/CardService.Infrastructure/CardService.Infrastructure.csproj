@@ -21,6 +21,7 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\CardService.Application\CardService.Application.csproj" />
       <ProjectReference Include="..\CardService.Domain\CardService.Domain.csproj" />
     </ItemGroup>
     
@@ -30,6 +31,9 @@
       </Reference>
       <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
         <HintPath>..\..\..\.nuget\packages\microsoft.aspnetcore.http.abstractions\2.3.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+        <HintPath>..\..\..\.nuget\packages\microsoft.extensions.hosting.abstractions\10.0.1\lib\net9.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
       </Reference>
     </ItemGroup>
 

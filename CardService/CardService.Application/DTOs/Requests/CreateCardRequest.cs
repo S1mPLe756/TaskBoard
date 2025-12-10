@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using CardService.Domain.Enum;
 
-namespace CardService.Application.DTOs;
+namespace CardService.Application.DTOs.Requests;
 
 public class CreateCardRequest
 {

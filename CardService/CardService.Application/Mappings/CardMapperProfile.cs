@@ -1,5 +1,7 @@
 using AutoMapper;
 using CardService.Application.DTOs;
+using CardService.Application.DTOs.Requests;
+using CardService.Application.DTOs.Responses;
 using CardService.Domain.Entities;
 
 namespace CardService.Application.Mappings;

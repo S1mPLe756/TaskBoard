@@ -34,6 +34,22 @@ public class BoardController : ControllerBase
         return Ok(await _boardService.GetBoardAsync(userId, boardId));
     }
     
+    [HttpPatch("{boardId:guid}")]
+    public async Task<IActionResult> UpdateBoard(Guid boardId, [FromBody] UpdateBoardRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _boardService.UpdateBoardAsync(userId, boardId, request);
+        return NoContent();
+    }
+    
+    [HttpDelete("{boardId:guid}")]
+    public async Task<IActionResult> DeleteBoard(Guid boardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _boardService.DeleteBoardAsync(userId, boardId);
+        return NoContent();
+    }
+    
     [HttpGet("{boardId:guid}/full")]
     public async Task<IActionResult> GetBoardFull(Guid boardId)
     {

@@ -8,4 +8,5 @@ public interface IBoardRepository
     Task AddBoardAsync(Board board);
     Task UpdateBoardAsync(Board board);
     Task<List<Board>> GetBoardsByWorkspaceAsync(Guid workspaceId);
+    Task DeleteBoardAsync(Board board);
 }

@@ -33,4 +33,10 @@ public class CardRepository : ICardRepository
         return await _context.Cards.Include(c=>c.Labels)
             .Include(c=>c.Checklists).ThenInclude(c=>c.Items).Where(c => requestCardIds.Contains(c.Id)).ToListAsync();
     }
+
+    public async Task DeleteCardsAsync(List<Card> cards)
+    {
+        _context.Cards.RemoveRange(cards);
+        await _context.SaveChangesAsync();
+    }
 }

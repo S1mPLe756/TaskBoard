@@ -1,0 +1,10 @@
+namespace CardService.Infrastructure.Settings;
+
+public class KafkaSettings
+{
+    public string BootstrapServers { get; set; } = "";
+    public string GroupId { get; set; } = "";
+    public string AutoOffsetReset { get; set; } = "Earliest";
+    public string DeleteBoardTopic { get; set; } = "";
+    public string DeleteColumnTopic { get; set; } = "";
+}

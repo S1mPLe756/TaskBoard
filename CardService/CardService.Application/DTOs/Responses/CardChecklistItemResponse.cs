@@ -1,4 +1,4 @@
-namespace CardService.Application.DTOs;
+namespace CardService.Application.DTOs.Responses;
 
 public class CardChecklistItemResponse
 {
