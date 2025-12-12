@@ -97,7 +97,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddDbContext<CardDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();

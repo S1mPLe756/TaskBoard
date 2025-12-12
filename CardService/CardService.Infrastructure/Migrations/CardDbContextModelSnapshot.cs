@@ -91,7 +91,8 @@ namespace CardService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CardId");
+                    b.HasIndex("CardId")
+                        .IsUnique();
 
                     b.ToTable("CardChecklists");
                 });
@@ -107,6 +108,9 @@ namespace CardService.Infrastructure.Migrations
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -156,8 +160,8 @@ namespace CardService.Infrastructure.Migrations
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>
                 {
                     b.HasOne("CardService.Domain.Entities.Card", "Card")
-                        .WithMany("Checklists")
-                        .HasForeignKey("CardId")
+                        .WithOne("Checklist")
+                        .HasForeignKey("CardService.Domain.Entities.CardChecklist", "CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -177,7 +181,8 @@ namespace CardService.Infrastructure.Migrations
 
             modelBuilder.Entity("CardService.Domain.Entities.Card", b =>
                 {
-                    b.Navigation("Checklists");
+                    b.Navigation("Checklist")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>

@@ -11,6 +11,7 @@ public class LabelMapperProfile : Profile
     public LabelMapperProfile()
     {
         CreateMap<CardLabelRequest, CardLabel>();
+        CreateMap<UpdateCardLabelRequest, CardLabel>();
 
         CreateMap<CardLabel, CardLabelResponse>();
     }

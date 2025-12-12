@@ -30,7 +30,15 @@ public static class DependencyInjection
         ;
 
         services.AddScoped<IBoardApiClient, BoardApiClient>();
+        
+        services.AddRefitClient<IUserApiRefitClient>()
+            .ConfigureHttpClient(client => 
+            {
+                client.BaseAddress = new Uri(configuration["ExternalServices:AuthApi"]);
+            }).AddHttpMessageHandler<UserIdHeaderHandler>();
+        ;
 
+        services.AddScoped<IUserApiClient, UserApiClient>();
 
         return services;
     }

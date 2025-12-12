@@ -6,4 +6,5 @@ public class CardChecklistItemResponse
 
     public string Text { get; set; } = string.Empty;
     public bool IsCompleted { get; set; }
+    public int Position { get; set; }
 }

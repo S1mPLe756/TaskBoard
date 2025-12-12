@@ -25,9 +25,8 @@ public class CardDbContext : Microsoft.EntityFrameworkCore.DbContext
             .WithMany(x=>x.Cards)
             .UsingEntity(j => j.ToTable("CardCardLabels"));
         model.Entity<Card>()
-            .HasMany(x=>x.Checklists)
+            .HasOne(x=>x.Checklist)
             .WithOne(x=>x.Card)
-            .HasForeignKey(x=>x.CardId)
             .OnDelete(DeleteBehavior.Cascade);
         
         model.Entity<CardChecklist>()

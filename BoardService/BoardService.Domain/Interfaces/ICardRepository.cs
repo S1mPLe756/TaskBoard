@@ -7,5 +7,8 @@ public interface ICardRepository
     Task AddCardPositionAsync(CardPosition card);
     
     Task<int> CountAsync(Guid columnId);
-    
+
+    Task<CardPosition?> GetCardPositionByIdAsync(Guid cardId);
+    Task UpdateCardPositionAsync(CardPosition card);
+    Task SaveChangesAsync();
 }

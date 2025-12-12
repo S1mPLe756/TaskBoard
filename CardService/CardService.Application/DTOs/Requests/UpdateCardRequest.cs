@@ -4,16 +4,18 @@ using CardService.Domain.Enum;
 
 namespace CardService.Application.DTOs.Requests;
 
-public class CreateCardRequest
+public class UpdateCardRequest
 {
+    [Required(ErrorMessage = "Id обязательно")]
+    public Guid Id { get; set; }
     [Required(ErrorMessage = "Название обязательно")]
     [StringLength(100, MinimumLength = 3, ErrorMessage = "Название должно быть от 3 до 100 символов")]
     public string Title { get; set; }
     [StringLength(256, MinimumLength = 0, ErrorMessage = "Описание должно быть от 0 до 256 символов")]
     public string? Description { get; set; }
     
-    public List<CardLabelRequest> Labels { get; set; } = new();
-    public CardChecklistRequest? Checklist { get; set; }
+    public List<UpdateCardLabelRequest> Labels { get; set; } = new();
+    public UpdateCardChecklistRequest? Checklist { get; set; } = new();
 
     
     [Required(ErrorMessage = "Приоритет обязателен")]
@@ -26,7 +28,6 @@ public class CreateCardRequest
     
     [Required(ErrorMessage = "Id доски обязательно")]
     public Guid BoardId { get; set; }
-    [Required(ErrorMessage = "Id колонки обязательно")]
-    public Guid ColumnId { get; set; }
+
     public List<Guid> AssigneeIds { get; set; } = new();
 }

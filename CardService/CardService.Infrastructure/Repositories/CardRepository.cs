@@ -14,7 +14,16 @@ public class CardRepository : ICardRepository
         _context = context;
     }
 
-    public async Task<Card?> GetCardByIdAsync(Guid id) => await _context.Cards.FindAsync(id);
+    public async Task<Card?> GetCardByIdAsync(Guid id)
+    {
+        var card = await _context.Cards.Include(c => c.Labels)
+            .Include(c => c.Checklist).ThenInclude(c =>c.Items).FirstOrDefaultAsync(c => c.Id == id);
+        if(card is { Checklist: not null })
+        {
+            card.Checklist.Items = card.Checklist.Items.OrderBy(c => c.Position).ToList();
+        }   
+        return card;
+    }
 
     public async Task CreateCardAsync(Card card)
     {
@@ -24,14 +33,14 @@ public class CardRepository : ICardRepository
 
     public async Task UpdateCardAsync(Card card)
     {
-        _context.Cards.Update(card);
         await _context.SaveChangesAsync();
     }
 
     public async Task<List<Card>> GetCardsByIdsAsync(List<Guid> requestCardIds)
     {
-        return await _context.Cards.Include(c=>c.Labels)
-            .Include(c=>c.Checklists).ThenInclude(c=>c.Items).Where(c => requestCardIds.Contains(c.Id)).ToListAsync();
+        return await _context.Cards.Include(c => c.Labels)
+            .Include(c => c.Checklist).ThenInclude(c => c.Items).Where(c => requestCardIds.Contains(c.Id))
+            .ToListAsync();
     }
 
     public async Task DeleteCardsAsync(List<Card> cards)

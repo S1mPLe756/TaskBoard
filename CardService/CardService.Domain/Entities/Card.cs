@@ -10,7 +10,7 @@ public class Card
     public string? Description { get; set; }
 
     public List<CardLabel> Labels { get; set; } = new();
-    public List<CardChecklist> Checklists { get; set; } = new();
+    public CardChecklist? Checklist { get; set; }
 
     public List<Guid> AssigneeIds { get; set; } = new();
     public List<Guid> WatcherIds { get; set; } = new();

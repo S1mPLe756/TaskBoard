@@ -17,4 +17,18 @@ public class CardRepository(BoardDbContext context) : ICardRepository
     {
         return await context.CardPositions.CountAsync(x => x.ColumnId == columnId);
     }
+
+    public async Task<CardPosition?> GetCardPositionByIdAsync(Guid cardId) =>
+        await context.CardPositions.Include(c=>c.Column).ThenInclude(cl=>cl.Board).FirstOrDefaultAsync(c => c.CardId == cardId);
+
+    public async Task UpdateCardPositionAsync(CardPosition card)
+    {
+        context.CardPositions.Update(card);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await context.SaveChangesAsync();
+    }
 }

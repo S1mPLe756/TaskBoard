@@ -12,7 +12,8 @@ public class CardMapperProfile : Profile
     {
         CreateMap<CreateCardRequest, Card>();
         CreateMap<Card, CardResponse>();
-        
+        CreateMap<Card, CardFullResponse>();
+
         
     }
 }
