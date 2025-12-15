@@ -10,4 +10,7 @@ public interface IBoardApiRefitClient
     
     [Get("/api/v1/Board/{boardId}")]
     Task<BoardDto?> GetBoardAsync(Guid boardId);
+
+    [Get("/api/v1/Board/by-card/{cardId}")]
+    Task<BoardDto?> GetBoardByCardIdAsync(Guid cardId);
 }

@@ -52,6 +52,24 @@ public class BoardService(
         return mapper.Map<BoardResponse>(board);
     }
 
+    public async Task<BoardResponse> GetBoardByCardIdAsync(Guid userId, Guid cardId)
+    {
+        var board = await repository.GetBoardByCardIdAsync(cardId);
+
+        if (board == null)
+        {
+            throw new AppException("Board not found", HttpStatusCode.NotFound);
+        }
+            
+        if (!await organizationApiClient.CanSeeWorkspaceAsync(workspaceId: board.WorkspaceId,
+                userId: userId))
+        {
+            throw new AppException("Can't see board", HttpStatusCode.Forbidden);
+        }
+        
+        return mapper.Map<BoardResponse>(board);
+    }
+
     public async Task<BoardsResponse> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId)
     {
         if (!await organizationApiClient.CanSeeWorkspaceAsync(workspaceId: workspaceId,

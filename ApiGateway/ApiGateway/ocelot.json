@@ -400,6 +400,48 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Card/{cardId}/attachments",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5107 }
+      ],
+      "UpstreamPathTemplate": "/cards/{cardId}/attachments",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Files",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "File",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5108 }
+      ],
+      "UpstreamPathTemplate": "/files",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Files/{id}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "File",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5108 }
+      ],
+      "UpstreamPathTemplate": "/files/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
     
   ],
@@ -474,6 +516,16 @@
           "Name": "API Card",
           "Version": "v1",
           "Url": "http://localhost:5107/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "File",
+      "Config": [
+        {
+          "Name": "API File",
+          "Version": "v1",
+          "Url": "http://localhost:5108/swagger/v1/swagger.json"
         }
       ]
     }

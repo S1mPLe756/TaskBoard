@@ -32,6 +32,14 @@ public class CardController : ControllerBase
         
         return Ok(await _cardService.UpdateCard(request, userId));
     }
+    
+    [HttpPost("{cardId:guid}/attachments")]
+    public async Task<IActionResult> AddAttachment(Guid cardId, [FromForm] IFormFile file)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _cardService.AddAttachmentAsync(cardId, file, userId));
+    }
 
 
     [HttpPost("batch")]

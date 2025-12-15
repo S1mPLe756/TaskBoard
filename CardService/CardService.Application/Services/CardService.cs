@@ -8,6 +8,7 @@ using CardService.Domain.DTOs;
 using CardService.Domain.Entities;
 using CardService.Domain.Interfaces;
 using ExceptionService;
+using Microsoft.AspNetCore.Http;
 
 namespace CardService.Application.Services;
 
@@ -18,6 +19,7 @@ public class CardService(
     IOrganizationApiClient organizationApiClient,
     ICardLabelRepository labelRepository,
     IUserApiClient userApiClient,
+    IFileApiClient fileApiClient,
     IEventPublisher eventPublisher)
     : ICardService
 {
@@ -215,6 +217,43 @@ public class CardService(
         return cardResponse;
 
     }
+    
+    public async Task<CardFullResponse> AddAttachmentAsync(Guid cardId, IFormFile file, Guid userId)
+    {
+        if (file == null || file.Length == 0)
+            throw new AppException("Файл не выбран");
+        
+        var card = await repository.GetCardByIdAsync(cardId);
+
+        if (card == null)
+            throw new AppException("Card not found", HttpStatusCode.NotFound);
+        
+        var board = await boardApiClient.GetBoardByCardIdAsync(cardId);
+        
+        if (!await organizationApiClient.CanChangeWorkspaceAsync(board.WorkspaceId, userId))
+        {
+            throw new AppException("You can't change workspace", HttpStatusCode.Forbidden);
+        }
+
+        using var content = new MultipartFormDataContent();
+        using var fileStream = file.OpenReadStream();
+
+        var response = await fileApiClient.UploadFileAsync(fileStream, file.FileName, file.ContentType);
+        
+
+
+        card.Attachments.Add(new ()
+        {
+            ContentType = file.ContentType,
+            FileName = file.FileName,
+            FileId = response.Id
+        });
+
+        await repository.UpdateCardAsync(card);
+
+        return mapper.Map<CardFullResponse>(card);
+    }
+
 
     private async Task UpdateLabels(UpdateCardRequest request, BoardDto board, Card card)
     {

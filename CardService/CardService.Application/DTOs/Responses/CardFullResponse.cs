@@ -16,6 +16,9 @@ public class CardFullResponse
     
     public List<UserResponse> Assignees { get; set; } = new();
     public List<UserResponse> Watchers { get; set; } = new();
+    
+    public List<CardAttachmentResponse> Attachments { get; set; } = new();
+
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CardPriority Priority { get; set; } = CardPriority.Normal;

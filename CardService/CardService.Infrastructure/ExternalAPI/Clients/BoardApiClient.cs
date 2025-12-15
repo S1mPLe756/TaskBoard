@@ -54,4 +54,27 @@ public class BoardApiClient : IBoardApiClient
         }
 
     }
+
+    public async Task<BoardDto?> GetBoardByCardIdAsync(Guid cardId)
+    {
+        try
+        {
+            _logger.LogInformation("Get board by card id {cardId}", 
+                cardId);
+            
+            return await _refitClient.GetBoardByCardIdAsync(cardId);
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "Error calling Board API for get board by card id {cardId}",
+                cardId);
+
+            if(ex.StatusCode == System.Net.HttpStatusCode.BadGateway)
+            {
+                throw new AppException("Board service unavailable");
+            }
+            throw new AppException("Board service return error", ex.StatusCode);
+        }
+        
+    }
 }

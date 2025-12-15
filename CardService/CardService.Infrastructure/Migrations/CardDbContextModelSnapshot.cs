@@ -76,6 +76,34 @@ namespace CardService.Infrastructure.Migrations
                     b.ToTable("Cards");
                 });
 
+            modelBuilder.Entity("CardService.Domain.Entities.CardAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CardId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("CardAttachment");
+                });
+
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>
                 {
                     b.Property<Guid>("Id")
@@ -157,6 +185,13 @@ namespace CardService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CardService.Domain.Entities.CardAttachment", b =>
+                {
+                    b.HasOne("CardService.Domain.Entities.Card", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("CardId");
+                });
+
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>
                 {
                     b.HasOne("CardService.Domain.Entities.Card", "Card")
@@ -181,8 +216,9 @@ namespace CardService.Infrastructure.Migrations
 
             modelBuilder.Entity("CardService.Domain.Entities.Card", b =>
                 {
-                    b.Navigation("Checklist")
-                        .IsRequired();
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Checklist");
                 });
 
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>

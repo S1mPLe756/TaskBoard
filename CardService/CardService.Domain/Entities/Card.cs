@@ -13,6 +13,8 @@ public class Card
     public CardChecklist? Checklist { get; set; }
 
     public List<Guid> AssigneeIds { get; set; } = new();
+    public List<CardAttachment> Attachments { get; set; } = new();
+
     public List<Guid> WatcherIds { get; set; } = new();
 
     public CardPriority Priority { get; set; } = CardPriority.Normal;

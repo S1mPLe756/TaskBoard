@@ -8,6 +8,7 @@ public interface IBoardService
 {
     Task<BoardResponse> CreateBoardAsync(Guid userId, CreateBoardRequest createBoardRequest);
     Task<BoardResponse> GetBoardAsync(Guid userId, Guid boardId);
+    Task<BoardResponse> GetBoardByCardIdAsync(Guid userId, Guid cardId);
     Task<BoardsResponse> GetBoardsByWorkspaceAsync(Guid userId, Guid workspaceId);
     Task<bool> IsExistBoardWithColumnAsync(Guid boardId, Guid columnId);
     Task<BoardFullResponse> GetBoardFullAsync(Guid userId, Guid boardId);

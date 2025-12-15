@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  file_mongo:
+    image: mongo:7.0.5-jammy
+    container_name: file_mongo
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE:  ${MONGOSETTINGS__DATABASENAME}
+    networks:
+      - tasks
+    volumes:
+      - "mongo_data:/data/db"
+      - "mongo_config:/data/configdb"
+  
+  mongo_express:
+    image: mongo-express:latest
+    container_name: file_mongo_express
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: file_mongo
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
+    ports:
+      - "5051:8081"
+    networks:
+      - tasks
+    depends_on:
+      - file_mongo
+
+volumes:
+  mongo_data:
+  mongo_config:
+
+networks:
+  tasks:
+    external: false

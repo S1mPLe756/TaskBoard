@@ -39,6 +39,16 @@ public static class DependencyInjection
         ;
 
         services.AddScoped<IUserApiClient, UserApiClient>();
+        
+        services.AddRefitClient<IFileApiRefitClient>()
+            .ConfigureHttpClient(client => 
+            {
+                client.BaseAddress = new Uri(configuration["ExternalServices:FileApi"]);
+            }).AddHttpMessageHandler<UserIdHeaderHandler>();
+        ;
+
+        services.AddScoped<IFileApiClient, FileApiClient>();
+
 
         return services;
     }

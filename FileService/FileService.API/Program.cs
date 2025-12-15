@@ -1,24 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
-using CardService.Application.Interfaces;
-using CardService.Application.Mappings;
-using CardService.Domain.Interfaces;
-using CardService.Infrastructure;
-using CardService.Infrastructure.DbContext;
-using CardService.Infrastructure.Messaging;
-using CardService.Infrastructure.Messaging.Consumers;
-using CardService.Infrastructure.Messaging.Producers;
-using CardService.Infrastructure.Repositories;
-using CardService.Infrastructure.Settings;
 using Confluent.Kafka;
 using DotNetEnv;
 using ExceptionService;
+using FileService.Domain.Interfaces;
+using FileService.Infrastructure.Messaging;
+using FileService.Infrastructure.Settings;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Serilog;
 using Shared.Middleware;
 
@@ -40,8 +33,7 @@ builder.Services.AddHealthChecks()
         timeout: TimeSpan.FromSeconds(5),
         failureStatus: HealthStatus.Unhealthy,
         tags: ["message-broker"]
-    )
-    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Boards DB");
+    );
 
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
@@ -96,33 +88,41 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddDbContext<CardDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddScoped<ICardRepository, CardRepository>();
-builder.Services.AddScoped<ICardLabelRepository, CardLabelRepository>();
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("MongoSettings"));
 
-builder.Services.AddScoped<ICardService, CardService.Application.Services.CardService>();
-builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IConfiguration>()
+        .GetSection("MongoSettings").Get<MongoSettings>();
+    return new MongoClient(settings.ConnectionString);
+});
 
-builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(CardChecklistMapperProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(LabelMapperProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(CardAttachmentMapperProfile).Assembly);
+builder.Services.AddScoped(sp =>
+{
+    var settings = sp.GetRequiredService<IConfiguration>()
+        .GetSection("MongoSettings").Get<MongoSettings>();
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(settings.DatabaseName);
+});
+
+
+
+builder.Services.AddScoped<IFileService, FileService.Infrastructure.Services.FileService>();
+builder.Services.AddSingleton<IEventPublisher, FileKafkaProducerService>();
+
 
 builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));
 builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaSettings>>().Value);
 
-builder.Services.AddHostedService<BoardDeleteConsumer>();
-builder.Services.AddHostedService<ColumnDeleteConsumer>();
 
 
 

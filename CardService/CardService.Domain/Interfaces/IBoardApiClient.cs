@@ -8,4 +8,5 @@ public interface IBoardApiClient
 
     Task<BoardDto?> GetBoardAsync(Guid boardId);
 
+    Task<BoardDto?> GetBoardByCardIdAsync(Guid cardId);
 }

@@ -34,6 +34,14 @@ public class BoardController : ControllerBase
         return Ok(await _boardService.GetBoardAsync(userId, boardId));
     }
     
+    [HttpGet("by-card/{cardId:guid}")]
+    public async Task<IActionResult> GetBoardByCardId(Guid cardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _boardService.GetBoardByCardIdAsync(userId, cardId));
+    }
+    
     [HttpPatch("{boardId:guid}")]
     public async Task<IActionResult> UpdateBoard(Guid boardId, [FromBody] UpdateBoardRequest request)
     {

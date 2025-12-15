@@ -29,11 +29,16 @@ public class CardDbContext : Microsoft.EntityFrameworkCore.DbContext
             .WithOne(x=>x.Card)
             .OnDelete(DeleteBehavior.Cascade);
         
+        model.Entity<Card>()
+            .HasMany(x=>x.Attachments)
+            .WithOne(x=>x.Card)
+            .HasForeignKey(x=>x.CardId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         model.Entity<CardChecklist>()
             .HasMany(c=>c.Items)
             .WithOne(x=>x.Checklist)
             .HasForeignKey(x=>x.ChecklistId)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
 }

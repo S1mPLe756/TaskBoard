@@ -15,7 +15,10 @@ public class BoardRepository : IBoardRepository
     }
 
     public async Task<Board?> GetBoardByIdAsync(Guid id) =>
-        await _dbContext.Boards.Include(b => b.Columns).ThenInclude(x=>x.Cards).FirstOrDefaultAsync(x => x.Id == id);
+        await _dbContext.Boards.Include(b => b.Columns).ThenInclude(x => x.Cards).FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task<Board?> GetBoardByCardIdAsync(Guid cardId) => await _dbContext.Boards.Include(b => b.Columns)
+        .ThenInclude(x => x.Cards).FirstOrDefaultAsync(x => x.Columns.Any(c=>c.Cards.Any(cr=>cr.CardId==cardId)));
 
     public async Task AddBoardAsync(Board board)
     {
