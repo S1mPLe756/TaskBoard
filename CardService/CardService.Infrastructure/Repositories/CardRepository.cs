@@ -48,4 +48,10 @@ public class CardRepository : ICardRepository
         _context.Cards.RemoveRange(cards);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteCardAsync(Card card)
+    {
+        _context.Cards.Remove(card);
+        await _context.SaveChangesAsync();
+    }
 }

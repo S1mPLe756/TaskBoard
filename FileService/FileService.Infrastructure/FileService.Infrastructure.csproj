@@ -18,6 +18,15 @@
       <Reference Include="Confluent.Kafka">
         <HintPath>..\..\..\.nuget\packages\confluent.kafka\2.3.0\lib\net6.0\Confluent.Kafka.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+        <HintPath>..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\10.0.0\lib\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+        <HintPath>..\..\..\.nuget\packages\microsoft.extensions.hosting.abstractions\10.0.0\lib\net9.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Options">
+        <HintPath>..\..\..\.nuget\packages\microsoft.extensions.options\10.0.0\lib\net9.0\Microsoft.Extensions.Options.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

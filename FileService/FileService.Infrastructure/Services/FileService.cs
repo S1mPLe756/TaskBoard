@@ -41,7 +41,7 @@ public class FileService : IFileService
 
     public async Task DeleteAsync(string fileId)
     {
-        await _gridFS.DeleteAsync(new MongoDB.Bson.ObjectId(fileId.ToString()));
+        await _gridFS.DeleteAsync(new MongoDB.Bson.ObjectId(fileId));
         await _kafkaProducer.ProduceAsync("file_deleted", new () { FileId = fileId });
     }
 
@@ -61,5 +61,14 @@ public class FileService : IFileService
     public Task<string> GetFileUrl(string fileId)
     {
         return Task.FromResult($"/api/v1/files/{fileId}");
+    }
+
+    public async Task DeleteFilesAsync(List<string> fileIds)
+    {
+        foreach (var fileId in fileIds)
+        {
+            await _gridFS.DeleteAsync(new MongoDB.Bson.ObjectId(fileId));
+            await _kafkaProducer.ProduceAsync("file_deleted", new() { FileId = fileId });
+        }
     }
 }

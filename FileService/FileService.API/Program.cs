@@ -4,6 +4,7 @@ using DotNetEnv;
 using ExceptionService;
 using FileService.Domain.Interfaces;
 using FileService.Infrastructure.Messaging;
+using FileService.Infrastructure.Messaging.Consumers;
 using FileService.Infrastructure.Settings;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -124,6 +125,7 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaSettings>>().Value);
 
 
+builder.Services.AddHostedService<CardDeletedConsumer>();
 
 
 var app = builder.Build();

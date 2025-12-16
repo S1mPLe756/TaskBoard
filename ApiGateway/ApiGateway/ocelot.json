@@ -395,7 +395,7 @@
         { "Host": "localhost", "Port": 5107 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -410,6 +410,20 @@
       ],
       "UpstreamPathTemplate": "/cards/{cardId}/attachments",
       "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Card/{cardId}/attachments/{fileId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5107 }
+      ],
+      "UpstreamPathTemplate": "/cards/{cardId}/attachments/{fileId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []

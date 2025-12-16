@@ -31,4 +31,10 @@ public class CardRepository(BoardDbContext context) : ICardRepository
     {
         await context.SaveChangesAsync();
     }
+
+    public async Task DeleteCardAsync(CardPosition card)
+    {
+        context.CardPositions.Remove(card);
+        await context.SaveChangesAsync();
+    }
 }

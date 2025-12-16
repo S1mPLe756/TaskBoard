@@ -45,4 +45,14 @@ public class KafkaProducerService : IEventPublisher
     {
         await PublishSendAsync("column-cards-delete-failed", evt);
     }
+
+    public async Task PublishFilesDeletedAsync(FilesDeletedEvent evt)
+    {
+        await PublishSendAsync("files-card-delete", evt);
+    }
+
+    public async Task PublishCardDeletedAsync(CardDeletedEvent evt)
+    {
+        await PublishSendAsync("card-deleted", evt);
+    }
 }

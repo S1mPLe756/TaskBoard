@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using CardService.Application.Interfaces;
 using CardService.Application.Mappings;
+using CardService.Application.Services;
 using CardService.Domain.Interfaces;
 using CardService.Infrastructure;
 using CardService.Infrastructure.DbContext;
@@ -109,6 +110,8 @@ builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ICardLabelRepository, CardLabelRepository>();
 
 builder.Services.AddScoped<ICardService, CardService.Application.Services.CardService>();
+builder.Services.AddScoped<ICardAttachmentsService, CardAttachmentsService>();
+
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 
 builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);

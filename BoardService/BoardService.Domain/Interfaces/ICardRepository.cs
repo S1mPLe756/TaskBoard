@@ -11,4 +11,5 @@ public interface ICardRepository
     Task<CardPosition?> GetCardPositionByIdAsync(Guid cardId);
     Task UpdateCardPositionAsync(CardPosition card);
     Task SaveChangesAsync();
+    Task DeleteCardAsync(CardPosition card);
 }

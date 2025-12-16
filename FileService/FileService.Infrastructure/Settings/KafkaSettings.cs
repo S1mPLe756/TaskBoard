@@ -6,4 +6,5 @@ public class KafkaSettings
     public string GroupId { get; set; } = "";
     public string AutoOffsetReset { get; set; } = "Earliest";
     public string FileUploadTopic { get; set; } = "";
+    public string FilesDeleteTopic { get; set; } = "";
 }

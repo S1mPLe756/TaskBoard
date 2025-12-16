@@ -10,4 +10,6 @@ public interface IEventPublisher
     
     Task PublishColumnCardsDeletedAsync(ColumnDeletionCompletedEvent evt);
     Task PublishColumnCardsDeleteFailedAsync(ColumnDeletionFailedEvent evt);
+    Task PublishFilesDeletedAsync(FilesDeletedEvent evt);
+    Task PublishCardDeletedAsync(CardDeletedEvent evt);
 }

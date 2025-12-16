@@ -82,7 +82,7 @@ namespace CardService.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CardId")
+                    b.Property<Guid>("CardId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ContentType")
@@ -187,9 +187,13 @@ namespace CardService.Infrastructure.Migrations
 
             modelBuilder.Entity("CardService.Domain.Entities.CardAttachment", b =>
                 {
-                    b.HasOne("CardService.Domain.Entities.Card", null)
+                    b.HasOne("CardService.Domain.Entities.Card", "Card")
                         .WithMany("Attachments")
-                        .HasForeignKey("CardId");
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
                 });
 
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>

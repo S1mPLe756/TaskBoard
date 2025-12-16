@@ -21,11 +21,33 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
+  hangfire:
+    image: postgres:16.3-alpine
+    container_name: hangfire_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+    ports:
+      - "5439:5432"
+    volumes:
+      - "hangfire_db:/var/lib/postgresql/data"
+    networks:
+      - board_service
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   board_db:
     name: board_db
+  hangfire_db:
+    name: hangfire_db
 
 
 networks:

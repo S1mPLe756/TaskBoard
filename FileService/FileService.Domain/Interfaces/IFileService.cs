@@ -7,4 +7,5 @@ public interface IFileService
     Task DeleteAsync(string fileId);
     Task<IEnumerable<FileService.Domain.Entities.File>> ListAsync();
     Task<string> GetFileUrl(string fileId);
+    Task DeleteFilesAsync(List<string> fileIds);
 }

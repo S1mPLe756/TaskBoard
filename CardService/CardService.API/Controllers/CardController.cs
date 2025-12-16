@@ -22,7 +22,15 @@ public class CardController : ControllerBase
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         
-        return Ok(await _cardService.CreateCard(request, userId));
+        return Ok(await _cardService.CreateCardAsync(request, userId));
+    }
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> CreateCard(Guid id)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _cardService.DeleteCardAsync(id, userId);
+        return NoContent();
     }
     
     [HttpPatch]
@@ -30,15 +38,7 @@ public class CardController : ControllerBase
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         
-        return Ok(await _cardService.UpdateCard(request, userId));
-    }
-    
-    [HttpPost("{cardId:guid}/attachments")]
-    public async Task<IActionResult> AddAttachment(Guid cardId, [FromForm] IFormFile file)
-    {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        return Ok(await _cardService.AddAttachmentAsync(cardId, file, userId));
+        return Ok(await _cardService.UpdateCardAsync(request, userId));
     }
 
 
@@ -51,6 +51,6 @@ public class CardController : ControllerBase
     [HttpGet("{cardId:guid}")]
     public async Task<IActionResult> GetCard(Guid cardId)
     {
-        return Ok(await _cardService.GetCard(cardId));
+        return Ok(await _cardService.GetCardAsync(cardId));
     }
 }

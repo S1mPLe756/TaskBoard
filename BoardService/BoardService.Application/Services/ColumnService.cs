@@ -16,7 +16,7 @@ public class ColumnService(
     IColumnRepository columnRepository,
     IBoardRepository boardRepository,
     IMapper mapper,
-    IOrganizationApiClient organizationApiClient, IEventPublisher eventPublisher)
+    IOrganizationApiClient organizationApiClient, IEventPublisher eventPublisher, IBackgroundJobClient _jobClient)
     : IColumnService
 {
 
@@ -124,7 +124,7 @@ public class ColumnService(
 
         await columnRepository.UpdateColumnAsync(column);
         
-        BackgroundJob.Schedule(
+        _jobClient.Schedule(
             () => RetryDeleteColumn(evtColumnId),
             TimeSpan.FromMinutes(5)
         );
@@ -155,7 +155,7 @@ public class ColumnService(
     }
 
 
-    private async Task RetryDeleteColumn(Guid evtColumnId)
+    public async Task RetryDeleteColumn(Guid evtColumnId)
     {
         var column = await columnRepository.GetColumnByIdAsync(evtColumnId);
         if (column == null || column.Status != DeletionStatus.DeletionFailed) return;

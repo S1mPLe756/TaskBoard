@@ -7,4 +7,5 @@ public interface ICardService
 {
     Task CreateCardPositionAsync(CreatedCardRequest dto);
     Task<ColumnCardResponse> UpdateCardPositionAsync(Guid userId, UpdateCardPositionRequest request);
+    Task DeleteCardPositionAsync(Guid messageCardId);
 }

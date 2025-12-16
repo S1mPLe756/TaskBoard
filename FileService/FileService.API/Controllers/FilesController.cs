@@ -1,3 +1,4 @@
+using FileService.Application.DTOs;
 using FileService.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,5 +29,19 @@ public class FilesController : ControllerBase
     {
         var bytes = await _fileService.DownloadAsync(id);
         return File(bytes, "application/octet-stream");
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _fileService.DeleteAsync(id);
+        return NoContent();
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteFiles([FromBody] FilesDeleteRequest request)
+    {
+        await _fileService.DeleteFilesAsync(request.FileIds);
+        return NoContent();
     }
 }

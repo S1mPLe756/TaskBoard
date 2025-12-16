@@ -12,6 +12,8 @@ using BoardService.Infrastructure.Settings;
 using Confluent.Kafka;
 using DotNetEnv;
 using ExceptionService;
+using Hangfire;
+using Hangfire.PostgreSql;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -127,6 +129,20 @@ builder.Services.AddHostedService<BoardCardsDeletedConsumer>();
 builder.Services.AddHostedService<BoardCardsDeleteFailedConsumer>();
 builder.Services.AddHostedService<ColumnCardsDeletedConsumer>();
 builder.Services.AddHostedService<ColumnCardsDeleteFailedConsumer>();
+builder.Services.AddHostedService<CardDeletedConsumer>();
+builder.Services.AddHangfire(config =>
+{
+    config.UsePostgreSqlStorage(options =>
+    {
+        options.UseNpgsqlConnection(
+            builder.Configuration.GetConnectionString("Hangfire")
+        );
+
+    });
+});
+
+
+builder.Services.AddHangfireServer();
 
 
 var app = builder.Build();

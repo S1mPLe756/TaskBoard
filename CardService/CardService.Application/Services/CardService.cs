@@ -23,7 +23,7 @@ public class CardService(
     IEventPublisher eventPublisher)
     : ICardService
 {
-    public async Task<CardFullResponse> GetCard(Guid cardId)
+    public async Task<CardFullResponse> GetCardAsync(Guid cardId)
     {
         var card = await repository.GetCardByIdAsync(cardId);
 
@@ -48,7 +48,7 @@ public class CardService(
         return cardResponse;
     }
 
-    public async Task<CardResponse> CreateCard(CreateCardRequest request, Guid userId)
+    public async Task<CardResponse> CreateCardAsync(CreateCardRequest request, Guid userId)
     {
         var board = await boardApiClient.GetBoardAsync(request.BoardId);
 
@@ -115,11 +115,16 @@ public class CardService(
         try
         {
             var cards = await repository.GetCardsByIdsAsync(deleteRequest.Cards);
-
+            var attachments = cards.SelectMany(card => card.Attachments).ToList();
             if (cards.Count > 0)
             {
                 await repository.DeleteCardsAsync(cards);
             }
+            
+            await eventPublisher.PublishFilesDeletedAsync(new()
+            {
+                FileIds = attachments.Select(a=>a.FileId).ToList()
+            });
 
             await eventPublisher.PublishBoardCardsDeletedAsync(new()
             {
@@ -145,11 +150,16 @@ public class CardService(
         try
         {
             var cards = await repository.GetCardsByIdsAsync(deleteRequest.Cards);
+            var attachments = cards.SelectMany(card => card.Attachments).ToList();
 
             if (cards.Count > 0)
             {
                 await repository.DeleteCardsAsync(cards);
             }
+            await eventPublisher.PublishFilesDeletedAsync(new()
+            {
+                FileIds = attachments.Select(a=>a.FileId).ToList()
+            });
 
             await eventPublisher.PublishColumnCardsDeletedAsync(new()
             {
@@ -163,11 +173,10 @@ public class CardService(
                 ColumnId = deleteRequest.ColumnId,
                 Message = ex.Message
             });
-            throw;
         }
     }
 
-    public async Task<CardFullResponse> UpdateCard(UpdateCardRequest request, Guid userId)
+    public async Task<CardFullResponse> UpdateCardAsync(UpdateCardRequest request, Guid userId)
     {
         var card = await repository.GetCardByIdAsync(request.Id);
 
@@ -217,41 +226,38 @@ public class CardService(
         return cardResponse;
 
     }
-    
-    public async Task<CardFullResponse> AddAttachmentAsync(Guid cardId, IFormFile file, Guid userId)
+
+    public async Task DeleteCardAsync(Guid id, Guid userId)
     {
-        if (file == null || file.Length == 0)
-            throw new AppException("Файл не выбран");
-        
-        var card = await repository.GetCardByIdAsync(cardId);
+        var card = await repository.GetCardByIdAsync(id);
 
         if (card == null)
             throw new AppException("Card not found", HttpStatusCode.NotFound);
         
-        var board = await boardApiClient.GetBoardByCardIdAsync(cardId);
+        var board = await boardApiClient.GetBoardByCardIdAsync(id);
         
         if (!await organizationApiClient.CanChangeWorkspaceAsync(board.WorkspaceId, userId))
         {
             throw new AppException("You can't change workspace", HttpStatusCode.Forbidden);
         }
 
-        using var content = new MultipartFormDataContent();
-        using var fileStream = file.OpenReadStream();
+        var attachments = card.Attachments;
 
-        var response = await fileApiClient.UploadFileAsync(fileStream, file.FileName, file.ContentType);
-        
-
-
-        card.Attachments.Add(new ()
+        await repository.DeleteCardAsync(card);
+        if(attachments.Count > 0)
         {
-            ContentType = file.ContentType,
-            FileName = file.FileName,
-            FileId = response.Id
+            await eventPublisher.PublishFilesDeletedAsync(new()
+            {
+                FileIds = attachments.Select(a => a.FileId).ToList()
+            });
+        }
+
+        await eventPublisher.PublishCardDeletedAsync(new()
+        {
+            CardId = card.Id
         });
 
-        await repository.UpdateCardAsync(card);
-
-        return mapper.Map<CardFullResponse>(card);
+        
     }
 
 

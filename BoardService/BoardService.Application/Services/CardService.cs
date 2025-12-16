@@ -59,4 +59,13 @@ public class CardService(ICardRepository repository, IColumnRepository columnRep
 
         return mapper.Map<ColumnCardResponse>(card);
     }
+
+    public async Task DeleteCardPositionAsync(Guid messageCardId)
+    {
+        var card = await repository.GetCardPositionByIdAsync(messageCardId);
+        if (card != null)
+        {
+            await repository.DeleteCardAsync(card);
+        }
+    }
 }

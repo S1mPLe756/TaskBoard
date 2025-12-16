@@ -23,4 +23,19 @@ public class FileApiClient(IFileApiRefitClient fileApiRefitClient, ILogger<FileA
             throw new AppException("Файл не загрузился", HttpStatusCode.InternalServerError);
         }
     }
+
+    public async Task DeleteFileAsync(string fileId)
+    {
+        try
+        {
+            await fileApiRefitClient.DeleteFileAsync(fileId);
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError(ex, "Error calling File API for delete file {fileId}", 
+                fileId);
+            throw new AppException("Файл не удалился", HttpStatusCode.InternalServerError);
+        }
+        
+    }
 }

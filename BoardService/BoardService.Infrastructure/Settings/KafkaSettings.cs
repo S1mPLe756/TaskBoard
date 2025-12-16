@@ -10,4 +10,5 @@ public class KafkaSettings
     public string DeleteFailedTopic { get; set; } = "";
     public string DeletedColumnTopic { get; set; } = "";
     public string DeleteColumnFailedTopic { get; set; } = "";
+    public string CardDeletedTopic { get; set; } = "";
 }
