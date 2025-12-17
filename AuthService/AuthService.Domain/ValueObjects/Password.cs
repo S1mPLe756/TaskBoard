@@ -17,7 +17,7 @@ public class Password
         if (string.IsNullOrWhiteSpace(plainPassword))
             throw new ArgumentException("Password cannot be empty");
 
-        if (plainPassword.Length < 6)
+        if (plainPassword.Length < 5)
             throw new ArgumentException("Password too short");
 
         var hash = BCrypt.HashPassword(plainPassword);
