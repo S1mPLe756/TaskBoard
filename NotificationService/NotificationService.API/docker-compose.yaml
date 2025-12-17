@@ -15,13 +15,25 @@ services:
     volumes:
       - "notification_db:/var/lib/postgresql/data"
     networks:
-      - notification_service
+      - taskboard-net
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 3
 
+  notification-service:
+    container_name: notification-service
+    build:
+      dockerfile: Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=notification_db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${DATASOURCE_PASSWORD}"
+    env_file:
+      - .env
+    ports:
+      - "5105:8080"
+    networks:
+      - taskboard-net
 
 volumes:
   notification_db:
@@ -29,5 +41,5 @@ volumes:
 
 
 networks:
-  notification_service:
-    external: false
+  taskboard-net:
+    external: true

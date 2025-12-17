@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,6 +33,12 @@
       <ProjectReference Include="..\CardService.Application\CardService.Application.csproj" />
       <ProjectReference Include="..\CardService.Domain\CardService.Domain.csproj" />
       <ProjectReference Include="..\CardService.Infrastructure\CardService.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

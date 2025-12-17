@@ -14,7 +14,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE:  ${MONGOSETTINGS__DATABASENAME}
     networks:
-      - tasks
+      - taskboard-net
     volumes:
       - "mongo_data:/data/db"
       - "mongo_config:/data/configdb"
@@ -34,14 +34,25 @@ services:
     ports:
       - "5051:8081"
     networks:
-      - tasks
+      - taskboard-net
     depends_on:
       - file_mongo
+
+  file-service:
+    container_name: file-service
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "5108:8080"
+    networks:
+      - taskboard-net
 
 volumes:
   mongo_data:
   mongo_config:
 
 networks:
-  tasks:
-    external: false
+  taskboard-net:
+    external: true

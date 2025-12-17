@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -29,6 +30,12 @@
       <ProjectReference Include="..\..\Shared.Middleware\Shared.Middleware\Shared.Middleware.csproj" />
       <ProjectReference Include="..\Organization.Application\Organization.Application.csproj" />
       <ProjectReference Include="..\Organization.Infrastructure\Organization.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

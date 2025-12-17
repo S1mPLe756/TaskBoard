@@ -15,12 +15,28 @@ services:
     volumes:
       - "card_db:/var/lib/postgresql/data"
     networks:
-      - card_service
+      - taskboard-net
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 3
+      
+  card-service:
+    container_name: card-service
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=card_db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${DATASOURCE_PASSWORD}"
+    depends_on:
+      card_db:
+        condition: service_healthy
+    ports:
+      - "5107:8080"
+    networks:
+      - taskboard-net
 
 
 volumes:
@@ -29,5 +45,5 @@ volumes:
 
 
 networks:
-  card_service:
-    external: false
+  taskboard-net:
+    external: true

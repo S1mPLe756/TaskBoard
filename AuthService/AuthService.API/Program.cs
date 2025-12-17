@@ -53,7 +53,7 @@ builder.Services.AddHealthChecks()
         tags: ["message-broker"]
     )
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "Postgres Auth DB");
-
+Console.WriteLine(builder.Configuration["Kafka:BootstrapServers"]);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 

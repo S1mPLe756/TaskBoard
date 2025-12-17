@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,6 +33,12 @@
       <ProjectReference Include="..\FileService.Application\FileService.Application.csproj" />
       <ProjectReference Include="..\FileService.Domain\FileService.Domain.csproj" />
       <ProjectReference Include="..\FileService.Infrastructure\FileService.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -15,12 +15,28 @@ services:
     volumes:
       - "user_profile_db:/var/lib/postgresql/data"
     networks:
-      - user_profile_service
+      - taskboard-net
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 3
+
+  user-profile-service:
+    container_name: user-profile-service
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=user_profile_db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${DATASOURCE_PASSWORD}"
+    depends_on:
+      user_profile_db:
+        condition: service_healthy
+    ports:
+      - "5103:8080"
+    networks:
+      - taskboard-net
 
 
 volumes:
@@ -29,5 +45,5 @@ volumes:
 
 
 networks:
-  user_profile_service:
-    external: false
+  taskboard-net:
+    external: true

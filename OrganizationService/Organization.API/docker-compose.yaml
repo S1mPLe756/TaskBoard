@@ -15,13 +15,28 @@ services:
     volumes:
       - "organization_db:/var/lib/postgresql/data"
     networks:
-      - organization_service
+      - taskboard-net
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 3
 
+  organization-service:
+    container_name: organization-service
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=organization_db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${DATASOURCE_PASSWORD}"
+    depends_on:
+      organization_db:
+        condition: service_healthy
+    ports:
+      - "5104:8080"
+    networks:
+      - taskboard-net
 
 volumes:
   organization_db:
@@ -29,5 +44,5 @@ volumes:
 
 
 networks:
-  organization_service:
-    external: false
+  taskboard-net:
+    external: true

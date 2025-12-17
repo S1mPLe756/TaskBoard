@@ -1,0 +1,16 @@
+﻿version: "3.8"
+
+services:
+  apigateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"
+    networks:
+      - taskboard-net
+
+networks:
+  taskboard-net:
+    external: true

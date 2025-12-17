@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/v1/Health",
       "DownstreamScheme": "http",
       "SwaggerKey": "Health",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5000 }],
+      "DownstreamHostAndPorts": [{ "Host": "apigateway", "Port": 8080 }],
       "UpstreamPathTemplate": "/api/v1/Health",
       "UpstreamHttpMethod": ["GET"],
       "DelegatingHandlers": ["RateLimitHandler"],
@@ -17,7 +17,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/login",
       "DownstreamScheme": "http",
       "SwaggerKey": "Auth",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "DownstreamHostAndPorts": [{ "Host": "auth-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": ["POST"],
       "DelegatingHandlers": ["RateLimitHandler"],
@@ -30,7 +30,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/register",
       "DownstreamScheme": "http",
       "SwaggerKey": "Auth",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "DownstreamHostAndPorts": [{ "Host": "auth-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/auth/register",
       "UpstreamHttpMethod": ["POST"],
       "AuthenticationOptions": {
@@ -42,7 +42,7 @@
       "DownstreamPathTemplate": "/api/v1/Token/validate",
       "DownstreamScheme": "http",
       "SwaggerKey": "Auth",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "DownstreamHostAndPorts": [{ "Host": "auth-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/token/validate",
       "UpstreamHttpMethod": ["POST"],
       "AuthenticationOptions": {
@@ -54,7 +54,7 @@
       "DownstreamPathTemplate": "/api/v1/Token/refresh",
       "DownstreamScheme": "http",
       "SwaggerKey": "Auth",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
+      "DownstreamHostAndPorts": [{ "Host": "auth-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/token/refresh",
       "UpstreamHttpMethod": ["POST"],
       "AuthenticationOptions": {
@@ -66,7 +66,7 @@
       "DownstreamPathTemplate": "/api/v1/Profile/{userId}",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "DownstreamHostAndPorts": [{ "Host": "user-profile-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/profile/{userId}",
       "UpstreamHttpMethod": ["GET"],
       "AuthenticationOptions": {
@@ -78,7 +78,7 @@
       "DownstreamPathTemplate": "/api/v1/Profile",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "DownstreamHostAndPorts": [{ "Host": "user-profile-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/profile",
       "UpstreamHttpMethod": ["GET"],
       "AuthenticationOptions": {
@@ -90,7 +90,7 @@
       "DownstreamPathTemplate": "/api/v1/Profile/avatar",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "DownstreamHostAndPorts": [{ "Host": "user-profile-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/profile/avatar",
       "UpstreamHttpMethod": ["POST"],
       "AuthenticationOptions": {
@@ -102,7 +102,7 @@
       "DownstreamPathTemplate": "/api/v1/Profile/preferences",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "DownstreamHostAndPorts": [{ "Host": "user-profile-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/profile/preferences",
       "UpstreamHttpMethod": ["PUT"],
       "AuthenticationOptions": {
@@ -114,7 +114,7 @@
       "DownstreamPathTemplate": "/api/v1/Profile",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "DownstreamHostAndPorts": [{ "Host": "user-profile-service", "Port": 8080 }],
       "UpstreamPathTemplate": "/profile",
       "UpstreamHttpMethod": ["PUT"],
       "AuthenticationOptions": {
@@ -127,7 +127,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace",
       "UpstreamHttpMethod": [ "POST", "GET" ],
@@ -141,7 +141,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/my",
       "UpstreamHttpMethod": [ "GET" ],
@@ -155,7 +155,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}",
       "UpstreamHttpMethod": [ "GET", "DELETE", "PATCH" ],
@@ -169,7 +169,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/members",
       "UpstreamHttpMethod": [ "POST", "DELETE", "GET" ],
@@ -183,7 +183,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
@@ -197,7 +197,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/can-change-workspace",
       "UpstreamHttpMethod": [ "GET" ],
@@ -211,7 +211,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/workspace/{workspaceId}/can-see-workspace/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
@@ -225,7 +225,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/invitation",
       "UpstreamHttpMethod": [ "POST", "GET" ],
@@ -239,7 +239,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/invitation/{invitationId}/workspace",
       "UpstreamHttpMethod": [ "GET" ],
@@ -253,7 +253,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Organization",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5104 }
+        { "Host": "organization-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/invitation/{invitationId}/accept",
       "UpstreamHttpMethod": [ "POST" ],
@@ -267,7 +267,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Notification",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5105 }
+        { "Host": "notification-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/notification/email",
       "UpstreamHttpMethod": [ "POST" ],
@@ -281,7 +281,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/board",
       "UpstreamHttpMethod": [ "POST" ],
@@ -295,7 +295,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/column/board/{boardId}",
       "UpstreamHttpMethod": [ "POST" ],
@@ -309,7 +309,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/column/{boardId}",
       "UpstreamHttpMethod": [ "DELETE","PATCH" ],
@@ -323,7 +323,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/position",
       "UpstreamHttpMethod": [ "PATCH" ],
@@ -337,7 +337,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/board/{boardId}",
       "UpstreamHttpMethod": [ "GET", "DELETE", "PATCH" ],
@@ -351,7 +351,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/board/workspace/{workspaceId}",
       "UpstreamHttpMethod": [ "GET" ],
@@ -365,7 +365,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Board",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5106 }
+        { "Host": "board-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/board/{boardId}/full",
       "UpstreamHttpMethod": [ "GET" ],
@@ -379,7 +379,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards",
       "UpstreamHttpMethod": [ "POST", "PATCH" ],
@@ -393,7 +393,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ],
@@ -407,7 +407,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}/unwatch",
       "UpstreamHttpMethod": [ "PATCH" ],
@@ -421,7 +421,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}/watch",
       "UpstreamHttpMethod": [ "PATCH" ],
@@ -435,7 +435,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}/attachments",
       "UpstreamHttpMethod": [ "POST" ],
@@ -449,7 +449,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5107 }
+        { "Host": "card-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/cards/{cardId}/attachments/{fileId}",
       "UpstreamHttpMethod": [ "DELETE" ],
@@ -463,7 +463,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "File",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5108 }
+        { "Host": "file-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/files",
       "UpstreamHttpMethod": [ "POST" ],
@@ -477,7 +477,7 @@
       "DownstreamScheme": "http",
       "SwaggerKey": "File",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5108 }
+        { "Host": "file-service", "Port": 8080 }
       ],
       "UpstreamPathTemplate": "/files/{id}",
       "UpstreamHttpMethod": [ "GET" ],
@@ -489,7 +489,7 @@
     
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000"
+    "BaseUrl": "http://apigateway:8080"
   },
   "SwaggerEndPoints": [
     {
@@ -498,7 +498,7 @@
         {
           "Name": "API Auth",
           "Version": "v1",
-          "Url": "http://localhost:5101/swagger/v1/swagger.json"
+          "Url": "http://auth-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -508,7 +508,7 @@
         {
           "Name": "API UserProfile",
           "Version": "v1",
-          "Url": "http://localhost:5103/swagger/v1/swagger.json"
+          "Url": "http://user-profile-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -518,7 +518,7 @@
         {
           "Name": "API Organization",
           "Version": "v1",
-          "Url": "http://localhost:5104/swagger/v1/swagger.json"
+          "Url": "http://organization-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -528,7 +528,7 @@
         {
           "Name": "API Notification",
           "Version": "v1",
-          "Url": "http://localhost:5105/swagger/v1/swagger.json"
+          "Url": "http://notification-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -538,7 +538,7 @@
         {
           "Name": "API Board",
           "Version": "v1",
-          "Url": "http://localhost:5106/swagger/v1/swagger.json"
+          "Url": "http://board-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -548,7 +548,7 @@
         {
           "Name": "API Card",
           "Version": "v1",
-          "Url": "http://localhost:5107/swagger/v1/swagger.json"
+          "Url": "http://card-service:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -558,7 +558,7 @@
         {
           "Name": "API File",
           "Version": "v1",
-          "Url": "http://localhost:5108/swagger/v1/swagger.json"
+          "Url": "http://file-service:8080/swagger/v1/swagger.json"
         }
       ]
     }

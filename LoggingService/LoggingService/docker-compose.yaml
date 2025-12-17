@@ -12,6 +12,8 @@ networks:
   default:
     name: elastic
     external: false
+  taskboard-net:
+    external: true
 
 services:
   setup:
@@ -75,6 +77,8 @@ services:
       - esdata01:/usr/share/elasticsearch/data
     ports:
       - 9201:9200
+    networks:
+      - taskboard-net
     environment:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}
@@ -135,4 +139,5 @@ services:
         ]
       interval: 10s
       timeout: 10s
-      retries: 120
+      retries: 120 
+
