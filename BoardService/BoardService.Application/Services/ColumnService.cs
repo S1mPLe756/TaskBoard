@@ -103,9 +103,15 @@ public class ColumnService(
     public async Task CompleteColumnDeletionAsync(Guid evtColumnId)
     {
         var column = await columnRepository.GetColumnByIdAsync(evtColumnId);
+        
         if (column == null)
         {
             throw new AppException("Column not found", HttpStatusCode.NotFound);
+        }
+        
+        if (column.Status != DeletionStatus.Deleting)
+        {
+            return;
         }
         
         await columnRepository.DeleteColumnAsync(column);

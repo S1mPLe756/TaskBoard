@@ -32,7 +32,7 @@ public class InvitationService(
 
         if (ws.OwnerId == user.Id)
         {
-            throw new AppException("You cannot accept the same user", HttpStatusCode.Forbidden);
+            throw new AppException("You cannot accept the same user", HttpStatusCode.Conflict);
         }
         
         var inv = new Invitation

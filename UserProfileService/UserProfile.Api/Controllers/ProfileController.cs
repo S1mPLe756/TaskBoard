@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using UserProfile.Application.DTOs.Requestes;
 using UserProfile.Application.Interfaces;
-using UserProfile.Application.Services;
 
 namespace UserProfile.Api.Controllers;
  
@@ -65,5 +64,14 @@ public class ProfileController : ControllerBase
         
         await _service.UpdatePreferencesAsync(dto);
         return NoContent();
+    }
+    
+    [HttpPost("avatar")]
+    public async Task<IActionResult> UpdateAvatar(IFormFile file)
+    {
+        var jwtUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (jwtUserId == null) return Forbid();
+
+        return Ok(await _service.UpdateAvatarAsync(Guid.Parse(jwtUserId), file));
     }
 }

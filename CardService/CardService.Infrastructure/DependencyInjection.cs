@@ -1,10 +1,10 @@
 using CardService.Domain.Interfaces;
 using CardService.Infrastructure.ExternalAPI;
 using CardService.Infrastructure.ExternalAPI.Clients;
-using CardService.Infrastructure.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using Shared.Middleware.Handlers;
 
 namespace CardService.Infrastructure;
 

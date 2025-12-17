@@ -22,38 +22,13 @@ namespace UserProfile.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("UserProfile.Domain.Entities.UserPreferences", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("NotificationsEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("UserProfileId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserProfileId")
-                        .IsUnique();
-
-                    b.ToTable("UserPreferences");
-                });
-
-            modelBuilder.Entity("UserProfile.Domain.Entities.UserProfile", b =>
+            modelBuilder.Entity("UserProfile.Domain.Entities.Profile", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AvatarUrl")
-                        .IsRequired()
+                    b.Property<string>("AvatarFileId")
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
@@ -78,16 +53,40 @@ namespace UserProfile.Infrastructure.Migrations
 
             modelBuilder.Entity("UserProfile.Domain.Entities.UserPreferences", b =>
                 {
-                    b.HasOne("UserProfile.Domain.Entities.UserProfile", "UserProfile")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("NotificationsEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("UserProfileId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserProfileId")
+                        .IsUnique();
+
+                    b.ToTable("UserPreferences");
+                });
+
+            modelBuilder.Entity("UserProfile.Domain.Entities.UserPreferences", b =>
+                {
+                    b.HasOne("UserProfile.Domain.Entities.Profile", "Profile")
                         .WithOne("Preferences")
                         .HasForeignKey("UserProfile.Domain.Entities.UserPreferences", "UserProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UserProfile");
+                    b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("UserProfile.Domain.Entities.UserProfile", b =>
+            modelBuilder.Entity("UserProfile.Domain.Entities.Profile", b =>
                 {
                     b.Navigation("Preferences")
                         .IsRequired();

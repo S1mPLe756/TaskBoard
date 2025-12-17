@@ -20,7 +20,7 @@ public class UserProfileDbContext : DbContext
         {
             builder.HasKey(u => u.UserId);
             builder.Property(u => u.FullName).IsRequired();
-            
+            builder.Property(u => u.AvatarFileId).IsRequired(false);
         });
         
         modelBuilder.Entity<Profile>()

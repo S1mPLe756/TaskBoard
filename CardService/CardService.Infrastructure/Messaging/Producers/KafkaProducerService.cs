@@ -55,4 +55,9 @@ public class KafkaProducerService : IEventPublisher
     {
         await PublishSendAsync("card-deleted", evt);
     }
+
+    public async Task PublishCardUpdatedEmailSend(CardUpdatedEmailSendEvent evt)
+    {
+        await PublishSendAsync("card-update-email-send", evt);
+    }
 }

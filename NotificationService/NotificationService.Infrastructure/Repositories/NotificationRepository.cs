@@ -31,4 +31,15 @@ public class NotificationRepository : INotificationRepository
         return _db.Notifications.FirstOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task AddRangeAsync(List<Notification> notifications)
+    {
+        await _db.Notifications.AddRangeAsync(notifications);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdateRangeAsync(List<Notification> notifications)
+    {
+        _db.Notifications.UpdateRange(notifications);
+        await _db.SaveChangesAsync();
+    }
 }

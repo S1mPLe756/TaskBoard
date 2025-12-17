@@ -7,7 +7,7 @@ namespace CardService.Application.Interfaces;
 
 public interface ICardService
 {
-    Task<CardFullResponse> GetCardAsync(Guid cardId);
+    Task<CardFullResponse> GetCardAsync(Guid cardId, Guid userId);
     Task<CardResponse> CreateCardAsync(CreateCardRequest request, Guid userId);
     Task<List<CardResponse>> GetCardsBatchAsync(GetCardsBatchRequest request);
     Task DeleteCardsAsync(DeleteCardsRequest deleteRequest);
@@ -15,4 +15,6 @@ public interface ICardService
     Task<CardFullResponse> UpdateCardAsync(UpdateCardRequest request, Guid userId);
 
     Task DeleteCardAsync(Guid id, Guid userId);
+    Task WatchCardAsync(Guid cardId, Guid userId);
+    Task UnWatchCardAsync(Guid cardId, Guid userId);
 }

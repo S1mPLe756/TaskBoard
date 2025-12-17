@@ -10,12 +10,12 @@ public class UpdateCardRequest
     public Guid Id { get; set; }
     [Required(ErrorMessage = "Название обязательно")]
     [StringLength(100, MinimumLength = 3, ErrorMessage = "Название должно быть от 3 до 100 символов")]
-    public string Title { get; set; }
+    public string? Title { get; set; }
     [StringLength(256, MinimumLength = 0, ErrorMessage = "Описание должно быть от 0 до 256 символов")]
     public string? Description { get; set; }
     
-    public List<UpdateCardLabelRequest> Labels { get; set; } = new();
-    public UpdateCardChecklistRequest? Checklist { get; set; } = new();
+    public List<UpdateCardLabelRequest>? Labels { get; set; }
+    public UpdateCardChecklistRequest? Checklist { get; set; }
 
     
     [Required(ErrorMessage = "Приоритет обязателен")]
@@ -29,5 +29,6 @@ public class UpdateCardRequest
     [Required(ErrorMessage = "Id доски обязательно")]
     public Guid BoardId { get; set; }
 
-    public List<Guid> AssigneeIds { get; set; } = new();
+    public List<Guid>? AssigneeIds { get; set; }
+    
 }

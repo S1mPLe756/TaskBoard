@@ -15,6 +15,7 @@ using UserProfile.Application.Interfaces;
 using UserProfile.Application.Mapping;
 using UserProfile.Application.Services;
 using UserProfile.Domain.Interfaces;
+using UserProfile.Infrastructure;
 using UserProfile.Infrastructure.DbContext;
 using UserProfile.Infrastructure.Messaging.Consumers;
 using UserProfile.Infrastructure.Repositories;
@@ -105,6 +106,9 @@ builder.Services.AddDbContext<UserProfileDbContext>(opt =>
 
 builder.Services.AddTaskBoardLoggingModule(builder.Configuration);
 builder.Host.UseSerilog();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IUserPreferencesRepository, UserPreferencesRepository>();

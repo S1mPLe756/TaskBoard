@@ -51,6 +51,24 @@ public class CardController : ControllerBase
     [HttpGet("{cardId:guid}")]
     public async Task<IActionResult> GetCard(Guid cardId)
     {
-        return Ok(await _cardService.GetCardAsync(cardId));
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        return Ok(await _cardService.GetCardAsync(cardId, userId));
+    }
+    
+    [HttpPatch("{cardId:guid}/watch")]
+    public async Task<IActionResult> WatchCard(Guid cardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _cardService.WatchCardAsync(cardId, userId);
+        return NoContent();
+    }
+    
+    [HttpPatch("{cardId:guid}/unwatch")]
+    public async Task<IActionResult> UnWatchCard(Guid cardId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _cardService.UnWatchCardAsync(cardId, userId);
+        return NoContent();
     }
 }

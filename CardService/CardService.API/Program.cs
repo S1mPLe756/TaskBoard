@@ -5,7 +5,6 @@ using CardService.Application.Services;
 using CardService.Domain.Interfaces;
 using CardService.Infrastructure;
 using CardService.Infrastructure.DbContext;
-using CardService.Infrastructure.Messaging;
 using CardService.Infrastructure.Messaging.Consumers;
 using CardService.Infrastructure.Messaging.Producers;
 using CardService.Infrastructure.Repositories;
@@ -15,6 +14,7 @@ using DotNetEnv;
 using ExceptionService;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -130,6 +130,28 @@ builder.Services.AddHostedService<ColumnDeleteConsumer>();
 
 
 var app = builder.Build();
+
+app.MapHealthChecks("/api/v1/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = new
+        {
+            status = report.Status.ToString(),
+            services = report.Entries.Select(e => new
+            {
+                serviceName = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Status != HealthStatus.Healthy ? e.Key + " is unreachable" : e.Value.Description,
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 
 if (app.Environment.IsDevelopment())
 {

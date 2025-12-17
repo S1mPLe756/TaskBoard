@@ -23,7 +23,7 @@ public class NotificationService : INotificationService
         _mapper = mapper;
     }
 
-    public async Task<Guid> SendAsync(NotificationRequest request)
+    public async Task<Guid> SendAsync(NotificationRequest request, CancellationToken ct = default)
     {
         var notif = _mapper.Map<Notification>(request);
 
@@ -31,10 +31,12 @@ public class NotificationService : INotificationService
 
         try
         {
+            ct.ThrowIfCancellationRequested();
+
             switch (request.Type)
             {
                 case NotificationType.Email:
-                    await _email.SendAsync(request.To, request.Title, request.Message);
+                    await _email.SendAsync(request.To, request.Title, request.Message, ct);
                     break;
 
             }
@@ -50,5 +52,56 @@ public class NotificationService : INotificationService
         await _repo.UpdateAsync(notif);
 
         return notif.Id;
+    }
+
+    public async Task<Guid> SendAsync(NotificationBulkRequest request, CancellationToken ct = default)
+    {
+        if (!request.Emails.Any())
+            throw new ArgumentException("Recipients list is empty");
+
+        var notifications = request.Emails
+            .Distinct()
+            .Select(email => new Notification
+            {
+                To = email,
+                Title = request.Title,
+                Message = request.Message,
+                Type = request.Type,
+                Sent = false
+            })
+            .ToList();
+
+        await _repo.AddRangeAsync(notifications);
+
+        try
+        {
+            ct.ThrowIfCancellationRequested();
+
+            switch (request.Type)
+            {
+                case NotificationType.Email:
+                    await _email.SendBulkAsync(
+                        notifications.Select(n => n.To),
+                        request.Title,
+                        request.Message,
+                        ct
+                    );
+                    break;
+            }
+
+            notifications.ForEach(n => n.Sent = true);
+        }
+        catch (Exception ex)
+        {
+            notifications.ForEach(n =>
+            {
+                n.Sent = false;
+                n.Error = ex.Message;
+            });
+        }
+
+        await _repo.UpdateRangeAsync(notifications);
+
+        return notifications.First().Id;
     }
 }

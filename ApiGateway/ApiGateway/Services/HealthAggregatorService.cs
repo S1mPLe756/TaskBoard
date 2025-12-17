@@ -15,8 +15,12 @@ public class HealthAggregatorService
     {
         { "AuthService", "http://localhost:5101/api/v1/health" },
         { "UserService", "http://localhost:5103/api/v1/health" },
-        { "BoardService", "http://localhost:5104/api/v1/health" },
-        { "NotificationService", "http://localhost:5105/api/v1/health" }
+        { "BoardService", "http://localhost:5106/api/v1/health" },
+        { "CardService", "http://localhost:5107/api/v1/health" },
+        { "OrganizationService", "http://localhost:5104/api/v1/health" },
+        { "NotificationService", "http://localhost:5105/api/v1/health" },
+        { "FileService", "http://localhost:5108/api/v1/health" },
+
     };
 
     public async Task<HealthCheckResponse> CheckHealthAsync()

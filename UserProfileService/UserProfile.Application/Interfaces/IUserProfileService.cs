@@ -1,4 +1,5 @@
 using AuthService.Application.DTOs;
+using Microsoft.AspNetCore.Http;
 using UserProfile.Application.DTOs.Requestes;
 using UserProfile.Domain.Entities;
 
@@ -13,4 +14,5 @@ public interface IUserProfileService
     Task<ProfileDto> UpdateProfileAsync(UpdateUserProfileDto dto, Guid userId);
     
     Task UpdatePreferencesAsync(UserPreferencesUpdateDto dto);
+    Task<string> UpdateAvatarAsync(Guid jwtUserId, IFormFile file);
 }

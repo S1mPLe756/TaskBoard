@@ -17,10 +17,19 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+      <PackageReference Include="Refit" Version="9.0.2" />
+      <PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Shared.Middleware\Shared.Middleware\Shared.Middleware.csproj" />
         <ProjectReference Include="..\UserProfile.Domain\UserProfile.Domain.csproj" />
         <ProjectReference Include="..\UserProfile.Application\UserProfile.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="ExceptionService">
+        <HintPath>..\..\..\.nuget\packages\exceptionservice\1.0.5\lib\net9.0\ExceptionService.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

@@ -20,6 +20,7 @@
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5101 }],
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": ["POST"],
+      "DelegatingHandlers": ["RateLimitHandler"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "",
         "AllowedScopes": []
@@ -62,18 +63,6 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Task",
-      "DownstreamScheme": "http",
-      "SwaggerKey": "Tasks",
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5102 }],
-      "UpstreamPathTemplate": "/task",
-      "UpstreamHttpMethod": ["GET"],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
       "DownstreamPathTemplate": "/api/v1/Profile/{userId}",
       "DownstreamScheme": "http",
       "SwaggerKey": "UserProfile",
@@ -92,6 +81,18 @@
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
       "UpstreamPathTemplate": "/profile",
       "UpstreamHttpMethod": ["GET"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Profile/avatar",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "UserProfile",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5103 }],
+      "UpstreamPathTemplate": "/profile/avatar",
+      "UpstreamHttpMethod": ["POST"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -402,6 +403,34 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Card/{cardId}/unwatch",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5107 }
+      ],
+      "UpstreamPathTemplate": "/cards/{cardId}/unwatch",
+      "UpstreamHttpMethod": [ "PATCH" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Card/{cardId}/watch",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5107 }
+      ],
+      "UpstreamPathTemplate": "/cards/{cardId}/watch",
+      "UpstreamHttpMethod": [ "PATCH" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Card/{cardId}/attachments",
       "DownstreamScheme": "http",
       "SwaggerKey": "Card",
@@ -470,16 +499,6 @@
           "Name": "API Auth",
           "Version": "v1",
           "Url": "http://localhost:5101/swagger/v1/swagger.json"
-        }
-      ]
-    },
-    {
-      "Key": "Tasks",
-      "Config": [
-        {
-          "Name": "API Tasks",
-          "Version": "v1",
-          "Url": "http://localhost:5102/swagger/v1/swagger.json"
         }
       ]
     },

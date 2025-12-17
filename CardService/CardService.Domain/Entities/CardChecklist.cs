@@ -2,7 +2,7 @@ namespace CardService.Domain.Entities;
 
 public class CardChecklist
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public string Title { get; set; } = string.Empty;
 

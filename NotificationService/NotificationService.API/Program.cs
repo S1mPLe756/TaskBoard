@@ -123,6 +123,7 @@ builder.Services.AddScoped<INotificationService, NotificationService.Application
 builder.Services.AddAutoMapper(typeof(NotificationMapperProfile).Assembly);
 
 builder.Services.AddHostedService<NotificationEmailSendConsumer>();
+builder.Services.AddHostedService<NotificationCardUpdateSendConsumer>();
 
 var app = builder.Build();
 

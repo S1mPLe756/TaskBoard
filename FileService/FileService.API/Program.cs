@@ -8,6 +8,7 @@ using FileService.Infrastructure.Messaging.Consumers;
 using FileService.Infrastructure.Settings;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -140,6 +141,28 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHealthChecks("/api/v1/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = new
+        {
+            status = report.Status.ToString(),
+            services = report.Entries.Select(e => new
+            {
+                serviceName = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Status != HealthStatus.Healthy ? e.Key + " is unreachable" : e.Value.Description,
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 
 app.UseExceptionService();
 app.UseTaskBoardLoggingModule();

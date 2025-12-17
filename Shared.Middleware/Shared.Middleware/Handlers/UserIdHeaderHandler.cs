@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace CardService.Infrastructure.Handlers;
+namespace Shared.Middleware.Handlers;
 
 public class UserIdHeaderHandler : DelegatingHandler
 {

@@ -12,6 +12,6 @@ public class RegisterRequestDto
     public string Username { get; set; } = null!;
     
     [Required(ErrorMessage = "Пароль обязателен")]
-    [StringLength(20, MinimumLength = 5, ErrorMessage = "Пароль должен иметь от 2 до 20 символов")]
+    [StringLength(20, MinimumLength = 5, ErrorMessage = "Пароль должен иметь от 5 до 20 символов")]
     public string Password { get; set; } = null!;
 }

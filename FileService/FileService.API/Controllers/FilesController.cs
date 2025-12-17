@@ -16,7 +16,7 @@ public class FilesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Upload([FromForm] IFormFile file)
+    public async Task<IActionResult> Upload(IFormFile file)
     {
         using var ms = new MemoryStream();
         await file.CopyToAsync(ms);

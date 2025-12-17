@@ -13,7 +13,7 @@ using NotificationService.Infrastructure.Utils;
 
 namespace NotificationService.Infrastructure.Messaging.Consumers;
 
-public class NotificationEmailSendConsumer : BackgroundService
+public class NotificationCardUpdateSendConsumer: BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IConsumer<Ignore, string> _consumer;
@@ -21,7 +21,7 @@ public class NotificationEmailSendConsumer : BackgroundService
     private readonly KafkaSettings _kafkaSettings;
     
 
-    public NotificationEmailSendConsumer(IServiceScopeFactory scopeFactory, IOptions<KafkaSettings> options)
+    public NotificationCardUpdateSendConsumer(IServiceScopeFactory scopeFactory, IOptions<KafkaSettings> options)
     {
         _scopeFactory = scopeFactory;
 
@@ -38,7 +38,7 @@ public class NotificationEmailSendConsumer : BackgroundService
 
         _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
         
-        _topic = _kafkaSettings.OrganizationEmailSend;
+        _topic = _kafkaSettings.CardUpdateSend;
 
     }
 
@@ -60,21 +60,29 @@ public class NotificationEmailSendConsumer : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var cr = _consumer.Consume(stoppingToken);
-            var message = JsonSerializer.Deserialize<InvitationSendEvent>(cr.Message.Value);
+            var message = JsonSerializer.Deserialize<CardUpdatedEvent>(cr.Message.Value);
 
             if (message != null)
             {
                 using var scope = _scopeFactory.CreateScope();
                 var service = scope.ServiceProvider.GetRequiredService<INotificationService>();
                 
-                var dto = new NotificationRequest
+                var emails = message.Emails
+                    .Where(e => !string.IsNullOrWhiteSpace(e))
+                    .Distinct()
+                    .ToList();
+
+                if (!emails.Any())
+                    continue;
+
+                var dto = new NotificationBulkRequest()
                 {
-                    To = message.Email,
-                    Title = "Приглашение TaskBoard",
-                    Message = EmailTemplates.Invite(message.OrganizationName, message.InvitationId),
+                    Emails = emails,
+                    Title = "Изменение в задаче",
+                    Message = message.Message,
                     Type = NotificationType.Email
                 };
-                
+
                 await service.SendAsync(dto);
             }
         }

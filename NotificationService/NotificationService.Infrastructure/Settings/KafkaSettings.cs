@@ -5,6 +5,7 @@ public class KafkaSettings
     public string BootstrapServers { get; set; } = "";
     public string GroupId { get; set; } = "";
     public string AutoOffsetReset { get; set; } = "Earliest";
-    public string Topic { get; set; } = "";
+    public string OrganizationEmailSend { get; set; } = "";
+    public string CardUpdateSend { get; set; } = "";
 
 }

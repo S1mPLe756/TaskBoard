@@ -64,18 +64,17 @@ public class BoardDeleteConsumer : BackgroundService
             var cr = _consumer.Consume(stoppingToken);
             var message = JsonSerializer.Deserialize<BoardDeleteEvent>(cr.Message.Value);
 
-            if (message != null)
-            {
-                using var scope = _scopeFactory.CreateScope();
-                var service = scope.ServiceProvider.GetRequiredService<ICardService>();
+            if (message == null) continue;
+            
+            using var scope = _scopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<ICardService>();
 
-                var deleteRequest = new DeleteCardsRequest()
-                {
-                    Cards = message.CardIds,
-                    BoardId = message.BoardId
-                };
-                await service.DeleteCardsAsync(deleteRequest);
-            }
+            var deleteRequest = new DeleteCardsRequest()
+            {
+                Cards = message.CardIds,
+                BoardId = message.BoardId
+            };
+            await service.DeleteCardsAsync(deleteRequest);
         }
     }
 

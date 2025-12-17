@@ -21,6 +21,7 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\..\Shared.Middleware\Shared.Middleware\Shared.Middleware.csproj" />
       <ProjectReference Include="..\CardService.Application\CardService.Application.csproj" />
       <ProjectReference Include="..\CardService.Domain\CardService.Domain.csproj" />
     </ItemGroup>

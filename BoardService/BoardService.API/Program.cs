@@ -16,6 +16,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using LoggingService.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -98,6 +99,8 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+
+
 builder.Services.AddDbContext<BoardDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -146,6 +149,28 @@ builder.Services.AddHangfireServer();
 
 
 var app = builder.Build();
+
+app.MapHealthChecks("/api/v1/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = new
+        {
+            status = report.Status.ToString(),
+            services = report.Entries.Select(e => new
+            {
+                serviceName = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Status != HealthStatus.Healthy ? e.Key + " is unreachable" : e.Value.Description,
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 
 if (app.Environment.IsDevelopment())
 {

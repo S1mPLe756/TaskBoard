@@ -12,7 +12,7 @@ public class CardAttachmentsController(ICardAttachmentsService cardAttachmentsSe
     
     
     [HttpPost("{cardId:guid}/attachments")]
-    public async Task<IActionResult> AddAttachment(Guid cardId, [FromForm] IFormFile file)
+    public async Task<IActionResult> AddAttachment(Guid cardId, IFormFile file)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 

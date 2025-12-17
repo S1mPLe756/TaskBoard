@@ -126,8 +126,6 @@ public class BoardService(
                 CardIds = cardIds
             });
             
-            
-            
             foreach (var column in board.Columns)
             {
                 column.Cards = column.Cards.OrderBy(c => c.Position).ToList();
@@ -136,6 +134,8 @@ public class BoardService(
                 {
                     cardRef.Card = cardsResponse.FirstOrDefault(c => c.Id == cardRef.CardId);
                 }
+                
+                column.Cards = column.Cards.Where(x=>x.Card != null).ToList();
             }
         }
         
