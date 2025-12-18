@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using ExceptionService;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -30,16 +31,17 @@ public class SmtpEmailSender : IEmailSender
         try
         {
             var port = _settings.Port;
-            var secureOption = port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls;
-            ct.ThrowIfCancellationRequested();
+            client.SslProtocols = SslProtocols.Tls12;
+            client.CheckCertificateRevocation = false;
 
-            await client.ConnectAsync(_settings.Host, port, secureOption);
+            var secureOption = port == 465
+                ? SecureSocketOptions.SslOnConnect
+                : SecureSocketOptions.StartTlsWhenAvailable;
 
-            await client.AuthenticateAsync(_settings.Username, _settings.Password);
-
-            await client.SendAsync(email);
-
-            await client.DisconnectAsync(true);
+            await client.ConnectAsync(_settings.Host, port, secureOption, ct);
+            await client.AuthenticateAsync(_settings.Username, _settings.Password, ct);
+            await client.SendAsync(email, ct);
+            await client.DisconnectAsync(true, ct);
         }
         catch (Exception e)
         {
@@ -69,16 +71,19 @@ public class SmtpEmailSender : IEmailSender
 
         try
         {
-            var secureOption = _settings.Port == 465
+            var port = _settings.Port;
+
+            client.SslProtocols = SslProtocols.Tls12;
+            client.CheckCertificateRevocation = false;
+
+            var secureOption = port == 465
                 ? SecureSocketOptions.SslOnConnect
-                : SecureSocketOptions.StartTls;
-            ct.ThrowIfCancellationRequested();
+                : SecureSocketOptions.StartTlsWhenAvailable;
 
-            await client.ConnectAsync(_settings.Host, _settings.Port, secureOption);
-            await client.AuthenticateAsync(_settings.Username, _settings.Password);
-
-            await client.SendAsync(email);
-            await client.DisconnectAsync(true);
+            await client.ConnectAsync(_settings.Host, port, secureOption, ct);
+            await client.AuthenticateAsync(_settings.Username, _settings.Password, ct);
+            await client.SendAsync(email, ct);
+            await client.DisconnectAsync(true, ct);
         }
         catch (Exception e)
         {

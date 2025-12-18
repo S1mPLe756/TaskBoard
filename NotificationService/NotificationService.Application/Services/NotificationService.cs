@@ -45,6 +45,7 @@ public class NotificationService : INotificationService
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             notif.Sent = false;
             notif.Error = ex.Message;
         }
@@ -93,6 +94,8 @@ public class NotificationService : INotificationService
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
+
             notifications.ForEach(n =>
             {
                 n.Sent = false;

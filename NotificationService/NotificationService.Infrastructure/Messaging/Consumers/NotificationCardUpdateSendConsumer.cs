@@ -83,7 +83,7 @@ public class NotificationCardUpdateSendConsumer: BackgroundService
                     Type = NotificationType.Email
                 };
 
-                await service.SendAsync(dto);
+                await service.SendAsync(dto, stoppingToken);
             }
         }
     }
