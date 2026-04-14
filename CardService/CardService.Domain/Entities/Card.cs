@@ -14,6 +14,8 @@ public class Card
 
     public List<Guid> AssigneeIds { get; set; } = new();
     public List<CardAttachment> Attachments { get; set; } = new();
+    
+    public List<Comment> Comments { get; set; } = new();
 
     public List<Guid> WatcherIds { get; set; } = new();
 

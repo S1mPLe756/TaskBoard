@@ -108,9 +108,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ICardLabelRepository, CardLabelRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddScoped<ICardService, CardService.Application.Services.CardService>();
 builder.Services.AddScoped<ICardAttachmentsService, CardAttachmentsService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddSingleton<IEventPublisher, KafkaProducerService>();
 
@@ -118,6 +120,7 @@ builder.Services.AddAutoMapper(typeof(CardMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CardChecklistMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(LabelMapperProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CardAttachmentMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(CommentMapperProfile).Assembly);
 
 builder.Services.AddSingleton(builder.Configuration["Kafka:BootstrapServers"]!);
 builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafka"));

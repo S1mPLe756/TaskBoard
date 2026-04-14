@@ -170,6 +170,37 @@ namespace CardService.Infrastructure.Migrations
                     b.ToTable("CardLabels");
                 });
 
+            modelBuilder.Entity("CardService.Domain.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AnsweredCommentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CardId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnsweredCommentId");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("CardCardLabel", b =>
                 {
                     b.HasOne("CardService.Domain.Entities.Card", null)
@@ -218,16 +249,41 @@ namespace CardService.Infrastructure.Migrations
                     b.Navigation("Checklist");
                 });
 
+            modelBuilder.Entity("CardService.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("CardService.Domain.Entities.Comment", "AnsweredComment")
+                        .WithMany("AnswerComments")
+                        .HasForeignKey("AnsweredCommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CardService.Domain.Entities.Card", "Card")
+                        .WithMany("Comments")
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AnsweredComment");
+
+                    b.Navigation("Card");
+                });
+
             modelBuilder.Entity("CardService.Domain.Entities.Card", b =>
                 {
                     b.Navigation("Attachments");
 
                     b.Navigation("Checklist");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("CardService.Domain.Entities.CardChecklist", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("CardService.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("AnswerComments");
                 });
 #pragma warning restore 612, 618
         }
