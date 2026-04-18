@@ -19,6 +19,7 @@ public class CardFullResponse
     
     public List<CardAttachmentResponse> Attachments { get; set; } = new();
 
+    public List<CommentResponse> Comments { get; set; } = new();
     public bool IsWatched { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CardPriority Priority { get; set; } = CardPriority.Normal;

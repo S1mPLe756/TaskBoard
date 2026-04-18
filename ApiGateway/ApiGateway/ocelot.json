@@ -459,6 +459,53 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Comment",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "card-service", "Port": 8080 }
+      ],
+      "UpstreamPathTemplate": "/comments",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Comment/card/{cardId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        { "Host": "card-service", "Port": 8080 }
+      ],
+      "UpstreamPathTemplate": "/comments/card/{cardId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Comment/{commentId}",
+      "DownstreamScheme": "http",
+      "SwaggerKey": "Card",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "card-service",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/comments/{commentId}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Files",
       "DownstreamScheme": "http",
       "SwaggerKey": "File",

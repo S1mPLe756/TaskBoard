@@ -17,7 +17,11 @@ public class CardRepository : ICardRepository
     public async Task<Card?> GetCardByIdAsync(Guid id)
     {
         var card = await _context.Cards.Include(c => c.Labels)
-            .Include(c => c.Checklist).ThenInclude(c =>c.Items).Include(c=>c.Attachments).FirstOrDefaultAsync(c => c.Id == id);
+            .Include(c => c.Checklist)
+            .ThenInclude(c =>c.Items)
+            .Include(c=>c.Attachments)
+            .Include(c => c.Comments)
+            .ThenInclude(cm => cm.AnsweredComment).FirstOrDefaultAsync(c => c.Id == id);
         if(card is { Checklist: not null })
         {
             card.Checklist.Items = card.Checklist.Items.OrderBy(c => c.Position).ToList();

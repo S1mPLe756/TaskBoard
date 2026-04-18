@@ -27,6 +27,15 @@ public class CommentService(
             throw new AppException("Card not found", HttpStatusCode.NotFound);
         }
 
+        Comment? answeredComment = null;
+        if (request.AnsweredCommentId.HasValue)
+        {
+            answeredComment = await repository.GetCommentByIdAsync(request.AnsweredCommentId.Value);
+            if(answeredComment == null)
+                throw new AppException("Reply comment not found", HttpStatusCode.NotFound);
+        }
+
+
         await CheckAsync(
             request.CardId,
             userId,
@@ -41,9 +50,34 @@ public class CommentService(
         
         await repository.CreateCommentAsync(comment);
         
-        return mapper.Map<CommentResponse>(comment);
+        comment.AnsweredComment = answeredComment;
+
+        var response = mapper.Map<CommentResponse>(comment);
+
+        await fillAuthors(userId, response);
+
+        return response;
     }
-    
+
+    private async Task fillAuthors(Guid userId, CommentResponse response)
+    {
+        var usersId = new List<Guid>() { userId };
+
+        if (response.AnsweredComment != null)
+        {
+            usersId.Add(response.AnsweredComment.UserId);
+        }
+
+        var users = await userApiClient.GetUsers(usersId);
+        
+        response.Author = users.First(x => x.Id == response.UserId);
+
+        if (response.AnsweredComment != null)
+        {
+            response.AnsweredComment.Author = users.First(x => x.Id == response.AnsweredComment.UserId);
+        }
+    }
+
     private async Task CheckAsync(
         Guid id,
         Guid userId,
@@ -65,12 +99,41 @@ public class CommentService(
             organizationApiClient.CanSeeWorkspaceAsync,
             boardApiClient.GetBoardByCardIdAsync
         );
+
+        var comments = await repository.GetCommentsCardIdAsync(cardId);
+
+        var commentsResponses = comments.Select(comment => mapper.Map<CommentResponse>(comment)).ToList();
+        await FillUsersAsync(comments, commentsResponses);
         
-        return (await repository.GetCommentsCardIdAsync(cardId)).Select(comment => mapper.Map<CommentResponse>(comment)).ToList();
+        return commentsResponses;
+    }
+    
+    private async Task FillUsersAsync(List<Comment> comments, List<CommentResponse> commentsResponses)
+    {
+        var usersId = comments.Select(comment => comment.UserId).ToList();
+        
+        var users = await userApiClient.GetUsers(usersId);
+        
+        commentsResponses.ForEach(comment => comment.Author = users.First(user => user.Id == comment.UserId));
     }
 
-    public Task DeleteComment(Guid commentId, Guid userId)
+
+    public async Task DeleteComment(Guid commentId, Guid userId)
     {
-        throw new NotImplementedException();
+        var comment = await repository.GetCommentByIdAsync(commentId);
+        
+        await CheckAsync(
+            comment.CardId,
+            userId,
+            organizationApiClient.CanSeeWorkspaceAsync,
+            boardApiClient.GetBoardByCardIdAsync
+        );
+
+        if (comment.UserId != userId)
+        {
+            throw new AppException("Нет прав на удаление комментария", HttpStatusCode.Forbidden);
+        }
+        
+        await repository.DeleteCommentAsync(comment);
     }
 }

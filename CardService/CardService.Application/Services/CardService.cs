@@ -312,6 +312,12 @@ public class CardService(
 
         if (card.WatcherIds?.Any() == true)
             response.Watchers = await userApiClient.GetUsers(card.WatcherIds);
+
+        if (card.Comments?.Any() == true)
+        {
+            var users = await userApiClient.GetUsers(card.Comments.Select(c => c.UserId).ToList());
+            response.Comments.ForEach(c=> c.Author = users.First(u => u.Id == c.UserId));
+        }
     }
 
 
